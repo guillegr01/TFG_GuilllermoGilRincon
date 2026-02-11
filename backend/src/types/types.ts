@@ -1,4 +1,4 @@
-import { ObjectId, OptionalId } from "mongodb";
+import { ObjectId } from "mongodb";
 
 /**
  * * Application type User 
