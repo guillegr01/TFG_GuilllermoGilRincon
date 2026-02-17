@@ -24,18 +24,22 @@ Private github repository, where my final college degree project is gonna be all
   - tsconfig.json (required config file) (editable by user)
   - src (folder with the application software)
   
-  Being at backend directory, install the following dependencies and drivers:
-  - npm install ts-node-dev -D
-  - npm install express
-  - npm install @types/express -D
-  - npm install mongodb
-  - npm install -D @types/node
+  Being at backend directory, the dependencies and drivers that are already installed are the followings:
+  - ts-node-dev -D
+  - express
+  - @types/express -D
+  - mongodb
+  - -D @types/node
+
+  To activate all of this dependencies, drivers and "node_modules" folder, user have to execute the following command:
+  - npm install
+  This command only works if user is located in the root of backend folder.
 
   ### Environmental variables
   An environmental variable is required to connect the program with the MongoDB Atlas Database.
   
   - User shall create a .env file in the root of backend directory with the following content:
-    MONGO_URI="mongodb+srv://USUARIO:PASSWORD@CLUSTER.mongodb.net/NOMBRE_BBDD"
+    MONGO_URL="mongodb+srv://ggil:user@clustername.rznxc.mongodb.net/?retryWrites=true&w=majority&appName=clustername"
   
   NOTE: For privacy and security reasons ".env" file is not uploaded to GitHub repository.
  
