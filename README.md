@@ -41,7 +41,7 @@ Private github repository, where my final college degree project is gonna be all
  
   ### Executing the server
   To execute the server, user shall execute the following command (user have to be located inside backend directory): 
-  -npm run dev
+  - npm run dev
   
   NOTE: This command is the one established to execute the server, according to "scripts" section in package.json.
   
