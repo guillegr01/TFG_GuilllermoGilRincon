@@ -16,13 +16,13 @@ Private github repository, where my final college degree project is gonna be all
 
   ### Dependencies and Drivers installation
   Once you have the project cloned and opened in VSCode:
-  -Change to backend directory: cd ./backend/
+  - Change to backend directory: cd ./backend/
 
   Already there, user shall find several files as:
-    - package.json (required config file)
-    - package-lock.json (required config file) (editable by user)
-    - tsconfig.json (required config file) (editable by user)
-    - src (folder with the application software)
+  - package.json (required config file)
+  - package-lock.json (required config file) (editable by user)
+  - tsconfig.json (required config file) (editable by user)
+  - src (folder with the application software)
   
   Being at backend directory, install the following dependencies and drivers:
   - npm install ts-node-dev -D
