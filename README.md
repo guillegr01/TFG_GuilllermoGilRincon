@@ -33,6 +33,7 @@ Private github repository, where my final college degree project is gonna be all
 
   To activate all of this dependencies, drivers and "node_modules" folder, user have to execute the following command:
   - npm install
+    
   This command only works if user is located in the root of backend folder.
 
   ### Environmental variables
