@@ -49,6 +49,8 @@ Private github repository, where my final college degree project is gonna be all
   - npm run dev
   
   NOTE: This command is the one established to execute the server, according to "scripts" section in package.json.
+
+  <img width="988" height="406" alt="Image" src="https://github.com/user-attachments/assets/27193a83-c0ca-4b6b-94c5-043229901aad" />
   
   ### Additional notes
   - "node_modules" folder is not included in the repository
