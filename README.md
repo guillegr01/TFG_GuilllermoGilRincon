@@ -41,7 +41,7 @@ Private github repository, where my final college degree project is gonna be all
   An environmental variable is required to connect the program with the MongoDB Atlas Database.
   
   - User shall create a .env file in the root of backend directory with the following content:
-    <img width="1742" height="330" alt="Image" src="https://github.com/user-attachments/assets/4e3d5cc8-5718-464c-9ca4-d45d66216c7e" />
+    <img width="1742" height="250" alt="Image" src="https://github.com/user-attachments/assets/4e3d5cc8-5718-464c-9ca4-d45d66216c7e" />
     
   NOTE: For privacy and security reasons ".env" file is not uploaded to GitHub repository.
  
@@ -51,7 +51,7 @@ Private github repository, where my final college degree project is gonna be all
   
   NOTE: This command is the one established to execute the server, according to "scripts" section in package.json.
 
-  <img width="988" height="406" alt="Image" src="https://github.com/user-attachments/assets/27193a83-c0ca-4b6b-94c5-043229901aad" />
+  <img width="988" height="250" alt="Image" src="https://github.com/user-attachments/assets/27193a83-c0ca-4b6b-94c5-043229901aad" />
   
   ### Additional notes
   - "node_modules" folder is not included in the repository
