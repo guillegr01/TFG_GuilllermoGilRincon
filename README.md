@@ -30,6 +30,7 @@ Private github repository, where my final college degree project is gonna be all
   - @types/express -D
   - mongodb
   - -D @types/node
+  - dotenv
 
   To activate all of this dependencies, drivers and "node_modules" folder, user have to execute the following command:
   - npm install
@@ -40,8 +41,8 @@ Private github repository, where my final college degree project is gonna be all
   An environmental variable is required to connect the program with the MongoDB Atlas Database.
   
   - User shall create a .env file in the root of backend directory with the following content:
-    MONGO_URL="mongodb+srv://ggil:user@clustername.rznxc.mongodb.net/?retryWrites=true&w=majority&appName=clustername"
-  
+    <img width="1742" height="330" alt="Image" src="https://github.com/user-attachments/assets/4e3d5cc8-5718-464c-9ca4-d45d66216c7e" />
+    
   NOTE: For privacy and security reasons ".env" file is not uploaded to GitHub repository.
  
   ### Executing the server
