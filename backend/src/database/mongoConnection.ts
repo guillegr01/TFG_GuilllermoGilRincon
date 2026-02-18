@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 /**
  * * File whose purpose is to create the connection between the server
  * * and our mongo database.
- * ? Step 1: safe the environmental variable MONGO_URL
+ * ? Step 1: save the environmental variable MONGO_URL
  * ? Step 2: valid MONGO_URL
  * ? Step 3: create MongoClient and define the DDBB connection function
  * ? Step 4: safe the DDBB from the mongo cluster
