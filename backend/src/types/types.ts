@@ -12,7 +12,7 @@ export type User = {
     email: string,                          //attribute email
     password: string,                       //attribute password
     birthDate: Date,                        //attribute birthDate
-    diabetesType: "Tipo 1" | "Tipo 2",      //attribute diabetesType
+    diabetesType: "tipo 1" | "tipo 2",      //attribute diabetesType
     registerDate: Date,                     //attribute registerDate
 }
 
@@ -24,10 +24,10 @@ export type User = {
 
 export type GlucoseRegister = {
     id: string,                             //attribute id
-    userId: ObjectId,                       //attribute userId
+    userId: string,                       //attribute userId
     glucoseValue: number,                   //attribute glucoseRegister
     date_hour: Date,                        //attribute date_hour
-    registerMethod: "Manual" | "Sensor",    //attribute registerMethod
+    registerMethod: "manual" | "sensor",    //attribute registerMethod
 }
 
 
@@ -38,14 +38,14 @@ export type GlucoseRegister = {
 
 export type CarbohydrateIntake = {
     id: string,                                             //attribute id
-    userId: ObjectId,                                       //attribute userId
+    userId: string,                                         //attribute userId
     grams: number,                                          //attribute grams
     glucoseValue: number,                                   //attribute glucoseValue
-    period: "Desayuno" | "Comida" | "Merienda" | "Cena",    //attribute period
+    period: "desayuno" | "comida" | "merienda" | "cena",    //attribute period
     date_hour: Date,                                        //attribute date_hour
     description?: string,                                   //attribute description
-    foodImages?: string[],                                   //attribute foodImages
-    totalBolus?: number,                                     //attribute totalBolus
+foodImages?: string[],                                      //attribute foodImages
+    totalBolus?: number,                                    //attribute totalBolus
 }
 
 
@@ -55,7 +55,7 @@ export type CarbohydrateIntake = {
  */
 export type Therapy = {
     id: string,                             //attribute id
-    userId: ObjectId,                       //attribute userId
+    userId: string,                         //attribute userId
     ratios: InsulinRatio[],                 //attribute ratios
     insulinActive: number,                  //attribute insulinActive
     glucoseLimits: GlucoseLimits,           //attribute glucoseLimits                 
@@ -67,7 +67,7 @@ export type Therapy = {
  * ! Non persistant type -> No DDBB model
  */
 export type InsulinRatio = {
-    period: "Desayuno" | "Comida" | "Merienda" | "Cena",    //attribute period
+    period: "desayuno" | "comida" | "merienda" | "cena",    //attribute period
     ratio: number,                                          //attribute ratio (Ui/R) (R=10gr aprox)
     ratioCorrection: number,                                //attribute ratioCorrection = sensibility factor ((mg/dl)/Ui)
 }

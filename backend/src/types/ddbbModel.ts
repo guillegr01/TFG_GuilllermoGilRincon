@@ -16,7 +16,7 @@ export type UserModel = OptionalId<{
     email: string,
     password: string,
     birthDate: Date,
-    diabetesType: "Tipo 1" | "Tipo 2",
+    diabetesType: "tipo 1" | "tipo 2",
     registerDate: Date,
 }>;
 
@@ -28,7 +28,7 @@ export type GlucoseRegisterModel = OptionalId<{
     userId: string,
     glucoseValue: number,
     date_hour: Date,
-    registerMethod: "Manual" | "Sensor",
+    registerMethod: "manual" | "sensor",
 }>;
 
 
@@ -39,7 +39,7 @@ export type CarbohydrateIntakeModel = OptionalId<{
     userId: string,
     grams: number,
     glucoseValue: number,
-    period: "Desayuno" | "Comida" | "Merienda" | "Cena",
+    period: "desayuno" | "comida" | "merienda" | "cena",
     date_hour: Date,
     description?: string,
     foodImages?: string[],
