@@ -1,6 +1,8 @@
 import express from 'express'
 import { connectDDBB } from './database/mongoConnection';
 
+import { router as userRouter } from './routers/userRoutes';
+
 /**
  * * This one is the main file that is gonna be executed.
  * * Its purpose is to create the server and run it.
@@ -18,7 +20,7 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
 //ROUTES
-
+app.use("/user", userRouter);
 
 //endpoint prueba
 app.get('/ping', (req, res) => {
