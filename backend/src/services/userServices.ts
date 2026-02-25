@@ -27,7 +27,6 @@ type UserInput = {
  * @param ui 
  * @returns Promise<User>
  */
-
 export const postUserService =  async (ui: UserInput): Promise<User> => {
     
     if(!ui.name||!ui.surname||!ui.password||!ui.birthDate||!ui.diabetesType) {

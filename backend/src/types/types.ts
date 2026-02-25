@@ -10,10 +10,10 @@ export type User = {
     name: string,                           //attribute name
     surname: string,                        //attribute surname
     email: string,                          //attribute email
-    password: string,                       //attribute password
     birthDate: Date,                        //attribute birthDate
     diabetesType: "tipo1" | "tipo2",        //attribute diabetesType
     registerDate: Date,                     //attribute registerDate
+    //password only in DDBB
 }
 
 

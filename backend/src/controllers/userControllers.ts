@@ -30,7 +30,7 @@ export const postUserController = async (req: Request, res:Response) => {
 
 
 /**
- * getUserByIdController
+ * * getUserByIdController
  * @param req 
  * @param res 
  */

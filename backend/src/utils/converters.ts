@@ -18,7 +18,6 @@ export const fromModelToUser = (um : UserModel): User => {
         name: um.name,
         surname: um.surname,
         email: um.email,
-        password: um.password,
         birthDate: um.birthDate,
         diabetesType: um.diabetesType,
         registerDate: um.registerDate
