@@ -1,5 +1,5 @@
 import express from "express"
-import { postUserController } from "../controllers/userController";
+import { postUserController, getUserByIdController } from "../controllers/userControllers";
 
 /**
  * * This file is used to route the different endpoints associated with the User entity.
@@ -9,3 +9,4 @@ import { postUserController } from "../controllers/userController";
 export const router = express.Router();
 
 router.post("/", postUserController);
+router.get("/:id", getUserByIdController);

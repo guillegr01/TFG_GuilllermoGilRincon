@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { UserCollection } from "../database/collections";
 import { UserModel } from "../types/ddbbModel";
 import { User } from "../types/types";
@@ -17,7 +18,7 @@ type UserInput = {
     email: string;
     password: string;
     birthDate: Date;
-    diabetesType: "tipo 1" | "tipo 2";
+    diabetesType: "tipo1" | "tipo2";
 };
 
 /**
@@ -53,5 +54,28 @@ export const postUserService =  async (ui: UserInput): Promise<User> => {
     const finalUser = fromModelToUser({_id: insertedId, ...userToDDBB});
 
     return finalUser;
+
+}
+
+
+/**
+ * * getUserByIdService
+ * ? METHOD: POST
+ * @param userId 
+ * @returns Promise<User>
+ */
+export const getUserByIdService = async (userId:string): Promise<User> => {
+
+    if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
+
+    const usersInDDBB = await UserCollection.countDocuments();
+    if(usersInDDBB===0) throw new Error("There are no users registered in the database.");
+
+    const userDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
+    if(!userDDBB) throw new Error("User not found.");
+
+    const userFound = fromModelToUser(userDDBB);
+
+    return userFound;
 
 }

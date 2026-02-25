@@ -16,7 +16,7 @@ export type UserModel = OptionalId<{
     email: string,
     password: string,
     birthDate: Date,
-    diabetesType: "tipo 1" | "tipo 2",
+    diabetesType: "tipo1" | "tipo2",
     registerDate: Date,
 }>;
 

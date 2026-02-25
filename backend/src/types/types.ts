@@ -12,7 +12,7 @@ export type User = {
     email: string,                          //attribute email
     password: string,                       //attribute password
     birthDate: Date,                        //attribute birthDate
-    diabetesType: "tipo 1" | "tipo 2",      //attribute diabetesType
+    diabetesType: "tipo1" | "tipo2",        //attribute diabetesType
     registerDate: Date,                     //attribute registerDate
 }
 
