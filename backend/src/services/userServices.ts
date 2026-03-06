@@ -21,6 +21,13 @@ type UserInput = {
     diabetesType: "tipo1" | "tipo2";
 };
 
+type UserInputUpdate = {
+    name?: string;
+    surname?: string;
+    email?: string;
+    diabetesType?: "tipo1" | "tipo2";
+}
+
 /**
  * * postUserService
  * ? METHOD: POST
@@ -53,7 +60,6 @@ export const postUserService =  async (ui: UserInput): Promise<User> => {
     const finalUser = fromModelToUser({_id: insertedId, ...userToDDBB});
 
     return finalUser;
-
 }
 
 
@@ -76,5 +82,72 @@ export const getUserByIdService = async (userId:string): Promise<User> => {
     const userFound = fromModelToUser(userDDBB);
 
     return userFound;
+}
 
+
+
+/**
+ * * putUserByIdService
+ * method findOneAndUpdate is used instead of updateOne, cause the 
+ * findOneAndUpdate updates the object and then it returns the model
+ * ? METHOD: PUT
+ * @param userId 
+ * @param uiu 
+ * @returns Promise<User>
+ */
+export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): Promise<User> => {
+
+    if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
+
+    if(!uiu.name && !uiu.surname && !uiu.email && !uiu.diabetesType) throw new Error("No fields data provided to update.");
+
+    if(uiu.email) {
+
+        //funcion verificación email
+
+        const emailInDDBB = await UserCollection.findOne({email: uiu.email, _id: {$ne: new ObjectId(userId)}})
+
+        if(emailInDDBB) throw new Error("Provided email is already in use by other User.");
+    }
+
+    const userModificationResult = await UserCollection.findOneAndUpdate({_id: new ObjectId(userId)}, {$set: uiu}, {returnDocument: "after"});
+
+    if(!userModificationResult) throw new Error("Modified user not found");
+
+    const modifiedUser = fromModelToUser(userModificationResult);
+
+    return modifiedUser;
+}
+
+
+/**
+ * * deleteUserByIdService
+ * info: in this service method used is 'deleteOne' cause is not
+ * neccesary to get back de userModel deleted. Only have to know 
+ * if the delete action was succesfull or not.
+ * 
+ * ? METHOD: DELETE
+ * @param userId 
+ * @returns Promise<boolean>
+ */
+export const deleteUserByIdService = async (userId: string): Promise<boolean> => {
+
+    let deletedUser: boolean;
+
+    if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
+
+    const userToDeleteDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
+
+    if(!userToDeleteDDBB) throw new Error("There is no user with the provided id.");
+
+    const { deletedCount } = await UserCollection.deleteOne({_id: new ObjectId(userId)}); 
+
+    if(deletedCount===0) {
+        deletedUser = false;
+        throw new Error("User to delete was not found.");
+    }else {
+        deletedUser = true;
+    }
+
+    return deletedUser;
 }

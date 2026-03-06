@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3000;
 
 //ROUTES
 app.use("/user", userRouter);
-app.use("/user", userRouter);
+
 
 //endpoint prueba
 app.get('/ping', (req, res) => {
