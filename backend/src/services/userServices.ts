@@ -28,6 +28,23 @@ type UserInputUpdate = {
     diabetesType?: "tipo1" | "tipo2";
 }
 
+
+/**
+ * * isValidEmail
+ * Description: this function shall validate the email received as a 
+ * parameter, then it returns true (valid email) or false (invalid email).
+ * To validate an email, the function uses the following regular expression:
+ * * /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+ * @param email 
+ * @returns 
+ */
+export const isValidEmail = (email: string): boolean => {
+
+    const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailFormat.test(email);
+};
+
+
 /**
  * * postUserService
  * ? METHOD: POST
@@ -36,11 +53,11 @@ type UserInputUpdate = {
  */
 export const postUserService =  async (ui: UserInput): Promise<User> => {
     
-    if(!ui.name||!ui.surname||!ui.password||!ui.birthDate||!ui.diabetesType) {
+    if(!ui.name||!ui.surname||!ui.email||!ui.password||!ui.birthDate||!ui.diabetesType) {
         throw new Error("Some required field wasn´t inserted correctly.");
     }
 
-    //funcion verificación email
+    if(!isValidEmail(ui.email)) throw new Error("The entered email is not valid.");
 
     const email = await UserCollection.findOne({email: ui.email});
     if(email) throw new Error("The e-mail introduced is already in the DDBBB.");
@@ -97,14 +114,17 @@ export const getUserByIdService = async (userId:string): Promise<User> => {
  */
 export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): Promise<User> => {
 
+    if(!userId) throw new Error("The field id is required.");
+
     if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
 
     if(!uiu.name && !uiu.surname && !uiu.email && !uiu.diabetesType) throw new Error("No fields data provided to update.");
 
     if(uiu.email) {
 
-        //funcion verificación email
+        if(!isValidEmail(uiu.email)) throw new Error("The entered email is not valid.");
 
+        //insertedEmail found in DDBB but other user owns taht email. $ne = not equal
         const emailInDDBB = await UserCollection.findOne({email: uiu.email, _id: {$ne: new ObjectId(userId)}})
 
         if(emailInDDBB) throw new Error("Provided email is already in use by other User.");
@@ -133,6 +153,8 @@ export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): 
 export const deleteUserByIdService = async (userId: string): Promise<boolean> => {
 
     let deletedUser: boolean;
+
+    if(!userId) throw new Error("The field id is required.");
 
     if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
 
