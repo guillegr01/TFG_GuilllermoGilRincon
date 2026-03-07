@@ -40,8 +40,8 @@ type UserInputUpdate = {
  */
 export const isValidEmail = (email: string): boolean => {
 
-    const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailFormat.test(email);
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
 };
 
 
