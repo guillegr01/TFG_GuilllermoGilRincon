@@ -1,5 +1,5 @@
 import express from "express"
-import { postGlucoseRegisterController } from "../controllers/glucoseRegisterControllers";
+import { postGlucoseRegisterController, getGlucoseRegisterByIdController } from "../controllers/glucoseRegisterControllers";
 
 /**
  * * This file is used to route the different endpoints associated with the Glucose Register entity.
@@ -10,3 +10,4 @@ export const router = express.Router();
 
 
 router.post("/", postGlucoseRegisterController);
+router.get("/:id", getGlucoseRegisterByIdController);

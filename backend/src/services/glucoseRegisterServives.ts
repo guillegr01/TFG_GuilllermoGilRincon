@@ -52,3 +52,23 @@ export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Pro
 
     return finalGlucoseRegister;
 }
+
+
+
+/**
+ * * getGlucoseRegisterByIdService
+ * ? METHOD: GET
+ * @param glucoseRegisterId 
+ * @returns Promise<GlucoseRegister>
+ */
+export const getGlucoseRegisterByIdService = async (glucoseRegisterId: string): Promise<GlucoseRegister> => {
+
+    if(!ObjectId.isValid(glucoseRegisterId)) throw new Error(`Glucose Register id ${glucoseRegisterId} is invalid.`);
+
+    const glucoseRegisterDDBB = await GlucoseRegisterCollection.findOne({_id: new ObjectId(glucoseRegisterId)});
+    if(!glucoseRegisterDDBB) throw new Error("Glucose register not found.");
+
+    const glucoseRegisterFound = fromModelToGlucoseRegister(glucoseRegisterDDBB);
+
+    return glucoseRegisterFound;
+}

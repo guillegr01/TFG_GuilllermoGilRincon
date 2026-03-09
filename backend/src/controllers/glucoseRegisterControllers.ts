@@ -1,5 +1,5 @@
 import { Request, Response} from "express"
-import { postGlucoseRegisterService } from "../services/glucoseRegisterServives";
+import { postGlucoseRegisterService, getGlucoseRegisterByIdService } from "../services/glucoseRegisterServives";
 
 
 /**
@@ -34,6 +34,37 @@ export const postGlucoseRegisterController = async(req: Request, res: Response) 
             res.json({message: "Internal server error while creating new glucose register."});
         }
 
+    }
+
+}
+
+
+/**
+ * * getGlucoseRegisterByIdController
+ * ? METHOD: GET
+ * @param req 
+ * @param res 
+ */
+export const getGlucoseRegisterByIdController = async(req: Request, res: Response) => {
+
+    try {
+        
+        const glucoseRegisterId = req.params.id as string;
+        const glucoseRegisterRequested = await getGlucoseRegisterByIdService(glucoseRegisterId);
+
+        res.status(200);
+        res.json(glucoseRegisterRequested);
+
+    } catch (error) {
+
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+        res.json({message: "Internal server error while getting glucose register."});
+        }
+        
     }
 
 }
