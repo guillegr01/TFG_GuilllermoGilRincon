@@ -1,6 +1,7 @@
 import { Request, Response} from "express"
-import { postGlucoseRegisterService, getGlucoseRegisterByIdService, getGlucoseRegistersByUserIdService } from "../services/glucoseRegisterServives";
-
+import { postGlucoseRegisterService } from "../services/glucoseRegisterServives";
+import { getGlucoseRegisterByIdService, getGlucoseRegistersByUserIdService } from "../services/glucoseRegisterServives";
+import { putGlucoseregisterByIdService }  from "../services/glucoseRegisterServives";
 
 /**
  * * Controller function related to Glucose Register entity shall recibe all the 
@@ -92,7 +93,36 @@ export const getGlucoseRegistersByUserIdController = async (req: Request, res: R
             res.json({error: error.message});
         }else {
             res.status(500);
-        res.json({message: "Internal server error while getting user glucose registers."});
+            res.json({message: "Internal server error while getting user glucose registers."});
+        }
+    }
+
+}
+
+
+/**
+ * * putGlucoseregisterByIdController
+ * ?METHOD: PUT
+ * @param req 
+ * @param res 
+ */
+export const putGlucoseregisterByIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const glucoseregisterId = req.params.id as string;
+        const modifiedGlucoseRegister = await putGlucoseregisterByIdService(glucoseregisterId, req.body);
+
+        res.status(200);
+        res.json(modifiedGlucoseRegister);
+
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+            res.json({message: "Internal server error while modifying glucose register."});
         }
     }
 

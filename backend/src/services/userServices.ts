@@ -114,11 +114,9 @@ export const getUserByIdService = async (userId:string): Promise<User> => {
  */
 export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): Promise<User> => {
 
-    if(!userId) throw new Error("The field id is required.");
-
     if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
 
-    if(!uiu.name && !uiu.surname && !uiu.email && !uiu.diabetesType) throw new Error("No fields data provided to update.");
+    if(!uiu.name && !uiu.surname && !uiu.email && !uiu.diabetesType) throw new Error("One or many required fields were not provided for update.");
 
     if(uiu.email) {
 
@@ -132,7 +130,7 @@ export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): 
 
     const userModificationResult = await UserCollection.findOneAndUpdate({_id: new ObjectId(userId)}, {$set: uiu}, {returnDocument: "after"});
 
-    if(!userModificationResult) throw new Error("Modified user not found");
+    if(!userModificationResult) throw new Error("Modified user not found.");
 
     const modifiedUser = fromModelToUser(userModificationResult);
 

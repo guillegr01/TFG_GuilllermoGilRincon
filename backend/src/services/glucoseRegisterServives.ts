@@ -18,6 +18,12 @@ type GlucoseRegisterInput = {
     registerMethod: "manual" | "sensor"
 };
 
+type GlucoseRegisterInputUpdate = {
+    glucoseValue?: number;
+    date_hour?: Date;
+    registerMethod?: "manual" | "sensor";
+}
+
 
 /**
  * * postGlucoseRegisterService
@@ -92,4 +98,26 @@ export const getGlucoseRegistersByUserIdService = async (userId: string): Promis
     const glucoseRegisters = glucoseRegistersDDBB.map((grm: GlucoseRegisterModel) => { return fromModelToGlucoseRegister(grm)});
 
     return glucoseRegisters;
+}
+
+
+/**
+ * * putGlucoseregisterByIdService
+ * ? METHOD: PUT
+ * @param glucoseRegisterId 
+ * @param griu 
+ * @returns Promise<GlucoseRegister>
+ */
+export const putGlucoseregisterByIdService = async (glucoseRegisterId: string, griu: GlucoseRegisterInputUpdate): Promise<GlucoseRegister> => {
+
+    if(!ObjectId.isValid(glucoseRegisterId)) throw new Error("The field glucose register id is invalid.");
+
+    if(!griu.glucoseValue && !griu.date_hour && !griu.registerMethod) throw new Error("One or many required fields were not provided for update.");
+
+    const glucoseRegisterModificationResult = await GlucoseRegisterCollection.findOneAndUpdate({_id: new ObjectId(glucoseRegisterId)}, {$set: griu}, {returnDocument: "after"});
+    if(!glucoseRegisterModificationResult) throw new Error("Modified glucose register not found.");
+
+    const modifiedGlucoseRegister = fromModelToGlucoseRegister(glucoseRegisterModificationResult);
+
+    return modifiedGlucoseRegister;
 }
