@@ -1,7 +1,8 @@
 import { Request, Response} from "express"
-import { postGlucoseRegisterService } from "../services/glucoseRegisterServives";
-import { getGlucoseRegisterByIdService, getGlucoseRegistersByUserIdService } from "../services/glucoseRegisterServives";
-import { putGlucoseregisterByIdService }  from "../services/glucoseRegisterServives";
+import { postGlucoseRegisterService } from "../services/glucoseRegisterServices";
+import { getGlucoseRegisterByIdService, getGlucoseRegistersByUserIdService } from "../services/glucoseRegisterServices";
+import { putGlucoseregisterByIdService }  from "../services/glucoseRegisterServices";
+import { deleteGlucoseRegisterByIdService } from "../services/glucoseRegisterServices";
 
 /**
  * * Controller function related to Glucose Register entity shall recibe all the 
@@ -123,6 +124,30 @@ export const putGlucoseregisterByIdController = async (req: Request, res: Respon
         }else {
             res.status(500);
             res.json({message: "Internal server error while modifying glucose register."});
+        }
+    }
+
+}
+
+
+
+export const deleteGlucoseregisterByIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const glucoseRegisterId = req.params.id as string;
+        const isGlucoseRegisterDeleted = await deleteGlucoseRegisterByIdService(glucoseRegisterId); 
+
+        res.status(200);
+        res.json(`Glucose register with id: ${glucoseRegisterId} was deleted succesfully from the DDBB.`);
+
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+            res.json({message: "Internal server error while deleting glucose register."});
         }
     }
 

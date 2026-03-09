@@ -121,3 +121,33 @@ export const putGlucoseregisterByIdService = async (glucoseRegisterId: string, g
 
     return modifiedGlucoseRegister;
 }
+
+
+/**
+ * * deleteGlucoseRegisterByIdService
+ * ? METHOD: DELETE
+ * @param glucoseRegisterId 
+ * @returns Promise<boolean>
+ */
+export const deleteGlucoseRegisterByIdService = async (glucoseRegisterId: string): Promise<boolean> => {
+
+    let deletedGlucoseRegister: boolean;
+
+    if(!glucoseRegisterId) throw new Error("The field id is required.");
+
+    if(!ObjectId.isValid(glucoseRegisterId)) throw new Error("The field glucose register id is invalid.");
+
+    const glucoseRegisterToDeleteDDBB = await GlucoseRegisterCollection.findOne({_id: new ObjectId(glucoseRegisterId)});
+    if(!glucoseRegisterToDeleteDDBB) throw new Error("There is no glucose register with the provided id.");
+
+    const { deletedCount } = await GlucoseRegisterCollection.deleteOne({_id: new ObjectId(glucoseRegisterId)});
+
+    if(deletedCount===0) {
+        deletedGlucoseRegister = false;
+        throw new Error("Glucose register to delete was not found.");
+    }else {
+        deletedGlucoseRegister = true;
+    }
+
+    return deletedGlucoseRegister;
+}
