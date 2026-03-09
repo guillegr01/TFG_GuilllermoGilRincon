@@ -14,3 +14,11 @@ export const UserCollection = db.collection<UserModel>("User");
 export const GlucoseRegisterCollection = db.collection<GlucoseRegisterModel>("GlucoseRegister");
 export const CarbohydrateIntakeCollection = db.collection<CarbohydrateIntakeModel>("CarbohydrateIntake");
 export const TherapyCollection = db.collection<TherapyModel>("Therapy");
+
+/**
+ * * Index for endpoint get /glucose-register/user/:userId
+ * Info: with this index mongo goes directly to userId field
+ * and has all the registers sorted by date_hour. This optimise
+ * mongo querys as .find() in  /glucose-register/user/:userId .
+ */
+GlucoseRegisterCollection.createIndex({userId: 1, date_hour: -1});

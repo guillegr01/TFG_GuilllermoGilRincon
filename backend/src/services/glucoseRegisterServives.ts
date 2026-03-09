@@ -54,7 +54,6 @@ export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Pro
 }
 
 
-
 /**
  * * getGlucoseRegisterByIdService
  * ? METHOD: GET
@@ -71,4 +70,26 @@ export const getGlucoseRegisterByIdService = async (glucoseRegisterId: string): 
     const glucoseRegisterFound = fromModelToGlucoseRegister(glucoseRegisterDDBB);
 
     return glucoseRegisterFound;
+}
+
+
+/**
+ * * getGlucoseRegistersByUserIdService
+ * ? METHOD: GET
+ * @param userId 
+ * @returns Promise<GlucoseRegister[]>
+ */
+export const getGlucoseRegistersByUserIdService = async (userId: string): Promise<GlucoseRegister[]> => {
+
+    if(!ObjectId.isValid(userId)) throw new Error(`Glucose register user id ${userId} is invalid.`);
+
+    const userDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
+    if(!userDDBB) throw new Error("User not found.");
+
+    //.sort({date_hour: -1}) sorts the glucose registers by descending date (the most recent date first)
+    const glucoseRegistersDDBB = await GlucoseRegisterCollection.find({userId: userId}).sort({date_hour: -1}).toArray();
+
+    const glucoseRegisters = glucoseRegistersDDBB.map((grm: GlucoseRegisterModel) => { return fromModelToGlucoseRegister(grm)});
+
+    return glucoseRegisters;
 }

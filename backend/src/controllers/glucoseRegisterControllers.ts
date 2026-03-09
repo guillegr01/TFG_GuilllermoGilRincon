@@ -1,5 +1,5 @@
 import { Request, Response} from "express"
-import { postGlucoseRegisterService, getGlucoseRegisterByIdService } from "../services/glucoseRegisterServives";
+import { postGlucoseRegisterService, getGlucoseRegisterByIdService, getGlucoseRegistersByUserIdService } from "../services/glucoseRegisterServives";
 
 
 /**
@@ -65,6 +65,35 @@ export const getGlucoseRegisterByIdController = async(req: Request, res: Respons
         res.json({message: "Internal server error while getting glucose register."});
         }
         
+    }
+
+}
+
+
+/**
+ * * getGlucoseRegistersByUserIdController
+ * ? METHOD: GET
+ * @param req 
+ * @param res 
+ */
+export const getGlucoseRegistersByUserIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const userId = req.params.userId as string;
+        const glucoseRegisters = await getGlucoseRegistersByUserIdService(userId);
+
+        res.status(200);
+        res.json(glucoseRegisters);
+
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+        res.json({message: "Internal server error while getting user glucose registers."});
+        }
     }
 
 }
