@@ -27,7 +27,7 @@ type GlucoseRegisterInput = {
  */
 export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Promise<GlucoseRegister> => {
 
-    if(!gri.userId || !gri.glucoseValue || !gri.date_hour || !gri.registerMethod) {
+    if(!gri.userId || gri.glucoseValue === undefined || !gri.date_hour || !gri.registerMethod) {
         throw new Error("Some required field for glucose value wasn´t inserted correctly.");
     }
 
@@ -37,7 +37,7 @@ export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Pro
 
     if(!userAssociatedExists) throw new Error("The inserted userID does not exists in DDBB.");
 
-    if(gri.glucoseValue <= 40) throw new Error("Glucose Value cannot be introduced (value out of range).");
+    if(gri.glucoseValue <= 40 || gri.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
 
     const glucoseRegisterToDDBB: GlucoseRegisterModel = {
         userId: gri.userId,
