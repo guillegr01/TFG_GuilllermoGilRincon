@@ -3,6 +3,7 @@ import { connectDDBB } from './database/mongoConnection';
 
 import { router as userRouter } from './routers/userRoutes';
 import { router as glucoseRegisterRouter } from './routers/glucoseRegisterRouter';
+import { router as carbohydrateIntakeRouter } from './routers/carbohydrateIntakeRouter';
 
 /**
  * * This one is the main file that is gonna be executed.
@@ -23,6 +24,7 @@ const PORT = process.env.PORT || 3000;
 //ROUTES
 app.use("/user", userRouter);
 app.use("/glucose-register", glucoseRegisterRouter);
+app.use("/carbohydrate-intake", carbohydrateIntakeRouter);
 
 
 //endpoint prueba

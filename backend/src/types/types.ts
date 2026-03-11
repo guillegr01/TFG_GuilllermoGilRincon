@@ -44,7 +44,7 @@ export type CarbohydrateIntake = {
     period: "desayuno" | "comida" | "merienda" | "cena",    //attribute period
     date_hour: Date,                                        //attribute date_hour
     description?: string,                                   //attribute description
-foodImages?: string[],                                      //attribute foodImages
+    foodImages?: string[],                                      //attribute foodImages
     totalBolus?: number,                                    //attribute totalBolus
 }
 

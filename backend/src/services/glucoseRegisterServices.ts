@@ -26,6 +26,7 @@ type GlucoseRegisterInputUpdate = {
 
 /**
  * * postGlucoseRegisterService
+ * TODO: check if the values entered for registerMethod attribute are valid
  * ? METHOD: POST
  * @param gri 
  * @returns Promise<GlucoseRegister>
@@ -102,6 +103,7 @@ export const getGlucoseRegistersByUserIdService = async (userId: string): Promis
 
 /**
  * * putGlucoseregisterByIdService
+ * TODO: check if the values entered for registerMethod attribute are valid
  * ? METHOD: PUT
  * @param glucoseRegisterId 
  * @param griu 

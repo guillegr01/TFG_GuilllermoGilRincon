@@ -22,3 +22,5 @@ export const TherapyCollection = db.collection<TherapyModel>("Therapy");
  * mongo querys as .find() in  /glucose-register/user/:userId .
  */
 GlucoseRegisterCollection.createIndex({userId: 1, date_hour: -1});
+
+CarbohydrateIntakeCollection.createIndex({userId: 1, date_hour: -1});
