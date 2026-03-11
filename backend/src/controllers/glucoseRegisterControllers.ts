@@ -130,7 +130,11 @@ export const putGlucoseregisterByIdController = async (req: Request, res: Respon
 }
 
 
-
+/**
+ * * deleteGlucoseregisterByIdController
+ * @param req 
+ * @param res 
+ */
 export const deleteGlucoseregisterByIdController = async (req: Request, res: Response) => {
 
     try {

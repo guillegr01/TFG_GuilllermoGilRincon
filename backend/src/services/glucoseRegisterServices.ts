@@ -14,7 +14,6 @@ import { fromModelToGlucoseRegister } from "../utils/converters";
 type GlucoseRegisterInput = {
     userId: string,
     glucoseValue: number,
-    date_hour: Date,
     registerMethod: "manual" | "sensor"
 };
 
@@ -33,7 +32,7 @@ type GlucoseRegisterInputUpdate = {
  */
 export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Promise<GlucoseRegister> => {
 
-    if(!gri.userId || gri.glucoseValue === undefined || !gri.date_hour || !gri.registerMethod) {
+    if(!gri.userId || gri.glucoseValue === undefined || !gri.registerMethod) {
         throw new Error("Some required field for glucose value wasn´t inserted correctly.");
     }
 
@@ -48,7 +47,7 @@ export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Pro
     const glucoseRegisterToDDBB: GlucoseRegisterModel = {
         userId: gri.userId,
         glucoseValue: gri.glucoseValue,
-        date_hour: gri.date_hour,
+        date_hour: new Date(),
         registerMethod: gri.registerMethod
     }
 
