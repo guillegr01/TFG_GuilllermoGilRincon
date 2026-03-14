@@ -33,7 +33,6 @@ const isValidEmail = (email: string): boolean => {
 
 /**
  * * postUserService
- * TODO: check if the values entered for diabetesType attribute are valid
  * ? METHOD: POST
  * @param ui 
  * @returns Promise<User>
@@ -94,7 +93,6 @@ export const getUserByIdService = async (userId:string): Promise<User> => {
 
 /**
  * * putUserByIdService
- * TODO: check if the values entered for registerMethod attribute are valid
  * Info: method findOneAndUpdate is used instead of updateOne, cause the 
  * findOneAndUpdate updates the object and then it returns the model
  * ? METHOD: PUT

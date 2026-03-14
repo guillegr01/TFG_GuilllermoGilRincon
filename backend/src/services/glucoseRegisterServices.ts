@@ -3,6 +3,7 @@ import { GlucoseRegister } from "../types/types";
 import { GlucoseRegisterCollection, UserCollection } from "../database/collections";
 import { GlucoseRegisterModel } from "../types/ddbbModel";
 import { fromModelToGlucoseRegister } from "../utils/converters";
+import { GlucoseRegisterInput, GlucoseRegisterInputUpdate, validRegisterMethod} from "../types/documents/glucoseRegisterDocument";
 
 
 /**
@@ -11,22 +12,9 @@ import { fromModelToGlucoseRegister } from "../utils/converters";
  * * data to its respective controller function.
  */
 
-type GlucoseRegisterInput = {
-    userId: string,
-    glucoseValue: number,
-    registerMethod: "manual" | "sensor"
-};
-
-type GlucoseRegisterInputUpdate = {
-    glucoseValue?: number;
-    date_hour?: Date;
-    registerMethod?: "manual" | "sensor";
-}
-
 
 /**
  * * postGlucoseRegisterService
- * TODO: check if the values entered for registerMethod attribute are valid
  * ? METHOD: POST
  * @param gri 
  * @returns Promise<GlucoseRegister>
@@ -44,6 +32,8 @@ export const postGlucoseRegisterService = async (gri: GlucoseRegisterInput): Pro
     if(!userAssociatedExists) throw new Error("The inserted userID does not exists in DDBB.");
 
     if(gri.glucoseValue <= 40 || gri.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
+
+    if(!validRegisterMethod.includes(gri.registerMethod)) throw new Error("The inserted register method is invalid.");
 
     const glucoseRegisterToDDBB: GlucoseRegisterModel = {
         userId: gri.userId,
@@ -103,7 +93,6 @@ export const getGlucoseRegistersByUserIdService = async (userId: string): Promis
 
 /**
  * * putGlucoseregisterByIdService
- * TODO: check if the values entered for registerMethod attribute are valid
  * ? METHOD: PUT
  * @param glucoseRegisterId 
  * @param griu 
@@ -114,6 +103,14 @@ export const putGlucoseregisterByIdService = async (glucoseRegisterId: string, g
     if(!ObjectId.isValid(glucoseRegisterId)) throw new Error("The field glucose register id is invalid.");
 
     if(!griu.glucoseValue && !griu.date_hour && !griu.registerMethod) throw new Error("One or many required fields were not provided for update.");
+
+    if(griu.registerMethod) {
+        if(!validRegisterMethod.includes(griu.registerMethod)) throw new Error("The inserted register method is invalid.");
+    }
+
+    if(griu.glucoseValue) {
+        if(griu.glucoseValue <= 40 || griu.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
+    }
 
     const glucoseRegisterModificationResult = await GlucoseRegisterCollection.findOneAndUpdate({_id: new ObjectId(glucoseRegisterId)}, {$set: griu}, {returnDocument: "after"});
     if(!glucoseRegisterModificationResult) throw new Error("Modified glucose register not found.");
