@@ -3,6 +3,7 @@ import { UserCollection } from "../database/collections";
 import { UserModel } from "../types/ddbbModel";
 import { User } from "../types/types";
 import { fromModelToUser } from "../utils/converters";
+import { UserInput, UserInputUpdate, validDiabetesType } from "../types/documents/userDocuments";
 
 
 /**
@@ -12,21 +13,6 @@ import { fromModelToUser } from "../utils/converters";
  */
 
 
-type UserInput = {
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-    birthDate: Date;
-    diabetesType: "tipo1" | "tipo2";
-};
-
-type UserInputUpdate = {
-    name?: string;
-    surname?: string;
-    email?: string;
-    diabetesType?: "tipo1" | "tipo2";
-}
 
 
 /**
@@ -38,7 +24,7 @@ type UserInputUpdate = {
  * @param email 
  * @returns 
  */
-export const isValidEmail = (email: string): boolean => {
+const isValidEmail = (email: string): boolean => {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailPattern.test(email);
@@ -47,6 +33,7 @@ export const isValidEmail = (email: string): boolean => {
 
 /**
  * * postUserService
+ * TODO: check if the values entered for diabetesType attribute are valid
  * ? METHOD: POST
  * @param ui 
  * @returns Promise<User>
@@ -56,6 +43,8 @@ export const postUserService =  async (ui: UserInput): Promise<User> => {
     if(!ui.name||!ui.surname||!ui.email||!ui.password||!ui.birthDate||!ui.diabetesType) {
         throw new Error("Some required field wasn´t inserted correctly.");
     }
+
+    if(!validDiabetesType.includes(ui.diabetesType)) throw new Error("Inserted DiabetesType is invalid.");
 
     if(!isValidEmail(ui.email)) throw new Error("The entered email is not valid.");
 
@@ -105,7 +94,8 @@ export const getUserByIdService = async (userId:string): Promise<User> => {
 
 /**
  * * putUserByIdService
- * method findOneAndUpdate is used instead of updateOne, cause the 
+ * TODO: check if the values entered for registerMethod attribute are valid
+ * Info: method findOneAndUpdate is used instead of updateOne, cause the 
  * findOneAndUpdate updates the object and then it returns the model
  * ? METHOD: PUT
  * @param userId 
@@ -117,6 +107,10 @@ export const putUserByIdService = async (userId: string, uiu: UserInputUpdate): 
     if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
 
     if(!uiu.name && !uiu.surname && !uiu.email && !uiu.diabetesType) throw new Error("One or many required fields were not provided for update.");
+
+    if(uiu.diabetesType) {
+        if(!validDiabetesType.includes(uiu.diabetesType)) throw new Error("Inserted DiabetesType is invalid.");
+    }
 
     if(uiu.email) {
 
