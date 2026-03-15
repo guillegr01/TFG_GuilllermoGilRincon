@@ -3,6 +3,7 @@ import { CarbohydrateIntake } from "../types/types";
 import { CarbohydrateIntakeModel } from '../types/ddbbModel';
 import { CarbohydrateIntakeCollection, UserCollection } from "../database/collections";
 import { fromModelToCarbohydrateIntake } from "../utils/converters";
+import { CarbohydrateIntakeInput, validPeriods } from "../types/documents/carbohydrateIntakeDocument";
 
 
 
@@ -14,24 +15,7 @@ import { fromModelToCarbohydrateIntake } from "../utils/converters";
 
 
 /**
- * * CarbohydrateIntakeInput
- * Info: totalBolus attribute shall be calculated by the backend, 
- * cannot be introduced by the user.
- */
-type CarbohydrateIntakeInput = {
-    userId: string,
-    grams: number,
-    glucoseValue: number,
-    period: "desayuno" | "comida" | "merienda" | "cena",
-    description?: string,
-    foodImages?: string[]
-}
-
-
-
-/**
  * TODO: obtain therapy associated with the user and calculate totalBolus.
- * TODO: check if the values entered for period attribute are valid
  * * postCarbohydrateIntakeService
  * ? METHOD: POST
  * @param chi_i 
@@ -44,6 +28,8 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
     }
 
     if(!ObjectId.isValid(chi_i.userId)) throw new Error("The field user id associated with carbohydrate intake is invalid.");
+
+    if(!validPeriods.includes(chi_i.period)) throw new Error("Inserted period is invalid.");
 
     const userAssociatedExists = await UserCollection.findOne({_id: new ObjectId(chi_i.userId)});
     if(!userAssociatedExists) throw new Error("The inserted userID does not exists in DDBB.");
@@ -73,4 +59,25 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
     const finalCarbohydrateIntake = fromModelToCarbohydrateIntake({_id: insertedId, ...carbohydrateIntakeToDDBB});
 
     return finalCarbohydrateIntake;
+}
+
+
+
+/**
+ * * getCarbohydrateIntakeByIdService
+ * ? METHOD: GET
+ * @param carbohydrateIntakeId 
+ * @returns Promise<CarbohydrateIntake>
+ */
+export const getCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: string): Promise<CarbohydrateIntake> => {
+
+    if(!ObjectId.isValid(carbohydrateIntakeId)) throw new Error(`Carbohydrate Intake id ${carbohydrateIntakeId} is invalid.`);
+
+    const carboHydrateIntakeDDBB = await CarbohydrateIntakeCollection.findOne({_id: new ObjectId(carbohydrateIntakeId)});
+    if(!carboHydrateIntakeDDBB) throw new Error("Carbohydrate Intake not found.");
+
+    const carboHydrateIntakeFound = fromModelToCarbohydrateIntake(carboHydrateIntakeDDBB);
+
+    return carboHydrateIntakeFound;
+
 }
