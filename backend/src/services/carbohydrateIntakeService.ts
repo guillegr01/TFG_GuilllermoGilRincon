@@ -81,3 +81,28 @@ export const getCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: str
     return carboHydrateIntakeFound;
 
 }
+
+
+
+/**
+ * * getCarbohydrateIntakeByUserIdService
+ * ? METHOD: GET
+ * @param userId 
+ * @returns Promise<CarbohydrateIntake[]>
+ */
+export const getCarbohydrateIntakeByUserIdService = async (userId: string): Promise<CarbohydrateIntake[]> => {
+
+    if(!ObjectId.isValid(userId)) throw new Error (`Carbohydrate intake user id ${userId} is invalid.`);
+
+    const userDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
+    if(!userDDBB) throw new Error("User not found.");
+
+    const carbohydrateIntakesDDBB = await CarbohydrateIntakeCollection.find({userId: userId}).sort({date_hour: -1}).toArray();
+
+    const carboHydrateIntakes = carbohydrateIntakesDDBB.map((cim: CarbohydrateIntakeModel) => {
+        return fromModelToCarbohydrateIntake(cim);
+    });
+
+    return carboHydrateIntakes;
+
+}
