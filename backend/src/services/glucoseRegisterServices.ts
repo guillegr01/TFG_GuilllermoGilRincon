@@ -102,13 +102,15 @@ export const putGlucoseregisterByIdService = async (glucoseRegisterId: string, g
 
     if(!ObjectId.isValid(glucoseRegisterId)) throw new Error("The field glucose register id is invalid.");
 
-    if(!griu.glucoseValue && !griu.date_hour && !griu.registerMethod) throw new Error("One or many required fields were not provided for update.");
+    if(griu.glucoseValue===undefined && griu.registerMethod===undefined) throw new Error("One or many required fields were not provided for update.");
 
-    if(griu.registerMethod) {
+    if(griu.registerMethod !== undefined) {
+        if(typeof griu.registerMethod !== "string") throw new Error("Register Method field must be string.");
         if(!validRegisterMethod.includes(griu.registerMethod)) throw new Error("The inserted register method is invalid.");
     }
 
-    if(griu.glucoseValue) {
+    if(griu.glucoseValue !== undefined) {
+        if(typeof griu.glucoseValue !== "number") throw new Error("Glucose Value field must be a number.");
         if(griu.glucoseValue <= 40 || griu.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
     }
 

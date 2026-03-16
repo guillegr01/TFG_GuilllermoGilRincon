@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { postCarbohydrateIntakeService } from '../services/carbohydrateIntakeService';
+import { postCarbohydrateIntakeService, putCarbohydrateIntakeByIdService } from '../services/carbohydrateIntakeService';
 import { getCarbohydrateIntakeByIdService, getCarbohydrateIntakeByUserIdService } from '../services/carbohydrateIntakeService';
 
 
@@ -86,6 +86,37 @@ export const getCarbohydrateIntakeByUserIdController = async (req: Request, res:
         
         res.status(200);
         res.json(carboHydratesIntakes);
+
+    } catch (error) {
+        
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+            res.json({message: "Internal server error while getting carbohydrate intakes by user ID."});
+        }
+
+    }
+
+}
+
+
+/**
+ * * putCarbohydrateIntakeByIdController
+ * ? METHOD: PUT
+ * @param req 
+ * @param res 
+ */
+export const putCarbohydrateIntakeByIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const carbohydrateIntakeID = req.params.id as string;
+        const modifiedCarbohydrateIntake = await putCarbohydrateIntakeByIdService(carbohydrateIntakeID, req.body);
+
+        res.status(200);
+        res.json(modifiedCarbohydrateIntake);
 
     } catch (error) {
         

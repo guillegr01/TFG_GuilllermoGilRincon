@@ -3,7 +3,7 @@ import { CarbohydrateIntake } from "../types/types";
 import { CarbohydrateIntakeModel } from '../types/ddbbModel';
 import { CarbohydrateIntakeCollection, UserCollection } from "../database/collections";
 import { fromModelToCarbohydrateIntake } from "../utils/converters";
-import { CarbohydrateIntakeInput, validPeriods } from "../types/documents/carbohydrateIntakeDocument";
+import { CarbohydrateIntakeInput, CarbohydrateIntakeUpdateInput, validPeriods } from "../types/documents/carbohydrateIntakeDocument";
 
 
 
@@ -62,7 +62,6 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
 }
 
 
-
 /**
  * * getCarbohydrateIntakeByIdService
  * ? METHOD: GET
@@ -81,7 +80,6 @@ export const getCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: str
     return carboHydrateIntakeFound;
 
 }
-
 
 
 /**
@@ -105,4 +103,47 @@ export const getCarbohydrateIntakeByUserIdService = async (userId: string): Prom
 
     return carboHydrateIntakes;
 
+}
+
+
+/**
+ * * putCarbohydrateIntakeByIdService
+ * ? METHOD: PUT
+ * @param chi_ui 
+ * @returns Promise<CarbohydrateIntake>
+ */
+export const putCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: string, chi_ui: CarbohydrateIntakeUpdateInput): Promise<CarbohydrateIntake> => {
+
+    if(!ObjectId.isValid(carbohydrateIntakeId)) throw new Error("The field carbohydrate intake id is invalid.");
+
+    if(chi_ui.grams===undefined && chi_ui.glucoseValue===undefined && chi_ui.period===undefined && chi_ui.description===undefined) throw new Error("One or many required fields were not provided for update.");
+
+    if(chi_ui.grams !== undefined) {
+        if(typeof chi_ui.grams !== "number") throw new Error("Grams field must be a number.");
+        if(chi_ui.grams<0) throw new Error("Carbohydrates grams cannot be introduced (value out of range).");
+    }
+
+    if(chi_ui.glucoseValue !== undefined) {
+        if(typeof chi_ui.glucoseValue !== "number") throw new Error("Glucose Value field must be a number.");
+        if(chi_ui.glucoseValue <= 40 || chi_ui.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
+    }
+
+    if(chi_ui.period !== undefined) {
+        if(typeof chi_ui.period !== "string") throw new Error("Period field must be a string.")
+        if(!validPeriods.includes(chi_ui.period)) throw new Error("Inserted period is invalid.");
+    }
+
+    if(chi_ui.description !== undefined) {
+        if(typeof chi_ui.description !== "string") throw new Error("Description field must be a string.")
+    }
+
+    const carbohydrateIntakeModificationResult = await CarbohydrateIntakeCollection.findOneAndUpdate(
+        {_id: new ObjectId(carbohydrateIntakeId)},
+        {$set: chi_ui}, { returnDocument: "after"});
+
+    if(!carbohydrateIntakeModificationResult) throw new Error("Modified carbohydrates intake not found.");
+
+    const modifiedCarbohydrateIntake = fromModelToCarbohydrateIntake(carbohydrateIntakeModificationResult);
+
+    return modifiedCarbohydrateIntake;
 }

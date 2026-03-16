@@ -17,4 +17,12 @@ export type CarbohydrateIntakeInput = {
     foodImages?: string[]
 }
 
+
+export type CarbohydrateIntakeUpdateInput = {
+    grams?: number
+    glucoseValue?: number
+    period?: "desayuno" | "comida" | "merienda" | "cena"
+    description?: string
+}
+
 export const validPeriods: string[] = ["desayuno", "comida", "merienda", "cena"];

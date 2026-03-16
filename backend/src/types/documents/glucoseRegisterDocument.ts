@@ -12,7 +12,6 @@ export type GlucoseRegisterInput = {
 
 export type GlucoseRegisterInputUpdate = {
     glucoseValue?: number;
-    date_hour?: Date;
     registerMethod?: "manual" | "sensor";
 }
 
