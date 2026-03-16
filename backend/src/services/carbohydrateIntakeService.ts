@@ -147,3 +147,30 @@ export const putCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: str
 
     return modifiedCarbohydrateIntake;
 }
+
+
+/**
+ * * deleteCarbohydrateIntakeByIdService
+ * ? METHOD: DELETE
+ * @param carbohydrateIntakeId 
+ * @returns Promise<boolean>
+ */
+export const deleteCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: string): Promise<boolean> => {
+
+    let deletedCarbohydrateIntake: boolean;
+
+    if(!carbohydrateIntakeId) throw new Error("The field id is required.");
+
+    if(!ObjectId.isValid(carbohydrateIntakeId)) throw new Error("Carbohydrate Intake ID is invalid");
+
+    const { deletedCount } = await CarbohydrateIntakeCollection.deleteOne({_id: new ObjectId(carbohydrateIntakeId)});
+
+    if(deletedCount===0) {
+        deletedCarbohydrateIntake = false;
+        throw new Error("Carbohydrate Intake to delete was not found.");
+    }else {
+        deletedCarbohydrateIntake = true;
+    }
+
+    return deletedCarbohydrateIntake;
+}

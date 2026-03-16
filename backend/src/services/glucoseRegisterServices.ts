@@ -137,9 +137,6 @@ export const deleteGlucoseRegisterByIdService = async (glucoseRegisterId: string
 
     if(!ObjectId.isValid(glucoseRegisterId)) throw new Error("The field glucose register id is invalid.");
 
-    const glucoseRegisterToDeleteDDBB = await GlucoseRegisterCollection.findOne({_id: new ObjectId(glucoseRegisterId)});
-    if(!glucoseRegisterToDeleteDDBB) throw new Error("There is no glucose register with the provided id.");
-
     const { deletedCount } = await GlucoseRegisterCollection.deleteOne({_id: new ObjectId(glucoseRegisterId)});
 
     if(deletedCount===0) {

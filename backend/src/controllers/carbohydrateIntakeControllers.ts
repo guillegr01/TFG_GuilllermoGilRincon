@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { postCarbohydrateIntakeService, putCarbohydrateIntakeByIdService } from '../services/carbohydrateIntakeService';
 import { getCarbohydrateIntakeByIdService, getCarbohydrateIntakeByUserIdService } from '../services/carbohydrateIntakeService';
-
+import { deleteCarbohydrateIntakeByIdService } from '../services/carbohydrateIntakeService';
 
 /**
  * * Controller function related to Carbohydrates Intakes entity shall recibe all the 
@@ -117,6 +117,38 @@ export const putCarbohydrateIntakeByIdController = async (req: Request, res: Res
 
         res.status(200);
         res.json(modifiedCarbohydrateIntake);
+
+    } catch (error) {
+        
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+            res.json({message: "Internal server error while modifying carbohydrate intakes by user ID."});
+        }
+
+    }
+
+}
+
+
+
+/**
+ * * deleteCarbohydrateIntakeByIdController
+ * ? METHOD: DELETE
+ * @param req 
+ * @param res 
+ */
+export const deleteCarbohydrateIntakeByIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const carbohydrateIntakeId = req.params.id as string;
+        const deletedCarbohydrateIntake = await deleteCarbohydrateIntakeByIdService(carbohydrateIntakeId);
+
+        res.status(200);
+        res.json(`Carbohydrate intake with id: ${carbohydrateIntakeId} was deleted succesfully from the DDBB.`);
 
     } catch (error) {
         

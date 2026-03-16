@@ -146,10 +146,6 @@ export const deleteUserByIdService = async (userId: string): Promise<boolean> =>
 
     if(!ObjectId.isValid(userId)) throw new Error("The field user id is invalid.");
 
-    const userToDeleteDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
-
-    if(!userToDeleteDDBB) throw new Error("There is no user with the provided id.");
-
     const { deletedCount } = await UserCollection.deleteOne({_id: new ObjectId(userId)}); 
 
     if(deletedCount===0) {
