@@ -23,7 +23,7 @@ import { CarbohydrateIntakeInput, CarbohydrateIntakeUpdateInput, validPeriods } 
  */
 export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInput): Promise<CarbohydrateIntake> => {
 
-    if(!chi_i.userId || chi_i.grams === undefined || !chi_i.glucoseValue === undefined || !chi_i.period) {
+    if(!chi_i.userId || chi_i.grams === undefined || chi_i.glucoseValue === undefined || !chi_i.period) {
         throw new Error("Some required field for carbohydrate intake wasn´t inserted correctly.");
     }
 
@@ -35,9 +35,25 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
     if(!userAssociatedExists) throw new Error("The inserted userID does not exists in DDBB.");
 
     //poner limite en gramos segun maximo de hidratos en un dia (therapy entity)
+    //grams field validation
+    if(typeof chi_i.grams !== "number") throw new Error("Grams field must be a number.");
     if(chi_i.grams<0) throw new Error("Carbohydrates grams cannot be introduced (value out of range).");
 
+    //glucose value field validation
+    if(typeof chi_i.glucoseValue !== "number") throw new Error("Glucose Value field must be a number.");
     if(chi_i.glucoseValue <= 40 || chi_i.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
+
+    //period filed validation
+    if(typeof chi_i.period !== "string") throw new Error("Period field must be a string.");
+    if(!validPeriods.includes(chi_i.period)) throw new Error("Inserted period is invalid.");
+
+    if(chi_i.description !== undefined) {
+        if(typeof chi_i.description !== "string") throw new Error("Description field must be a string.");
+    }
+
+    if(chi_i.foodImages !== undefined ) {
+        if(!Array.isArray(chi_i.foodImages)) throw new Error("FoodImages field must be an array");
+    }
 
     // obtener therapy
 
@@ -108,6 +124,7 @@ export const getCarbohydrateIntakeByUserIdService = async (userId: string): Prom
 
 /**
  * * putCarbohydrateIntakeByIdService
+ * TODO: recalculate totalBolus if grams or glucosevalue is modified
  * ? METHOD: PUT
  * @param chi_ui 
  * @returns Promise<CarbohydrateIntake>
