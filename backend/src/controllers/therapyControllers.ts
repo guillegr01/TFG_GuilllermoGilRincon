@@ -1,5 +1,5 @@
 import { Request, Response} from "express"
-import { postTherapyService, getTherapyByUserService } from "../services/therapyServices"
+import { postTherapyService, getTherapyByUserService, putTherapyByIdService } from "../services/therapyServices"
 
 
 /**
@@ -63,6 +63,37 @@ export const getTherapyByUserController = async (req: Request, res: Response) =>
         }else {
             res.status(500);
             res.json({message: "Internal server error while getting user therapy."});
+        }
+
+    }
+
+}
+
+
+/**
+ * * putTherapyByIdController
+ * ? METHOD: PUT
+ * @param req 
+ * @param res 
+ */
+export const putTherapyByIdController = async (req: Request, res: Response) => {
+
+    try {
+        
+        const TherapyId = req.params.id as string;
+        const modifiedTherapy = await putTherapyByIdService(TherapyId, req.body);
+
+        res.status(200);
+        res.json(modifiedTherapy);
+
+    } catch (error) {
+        
+        if (error instanceof Error) {
+            res.status(404);
+            res.json({error: error.message});
+        }else {
+            res.status(500);
+            res.json({message: "Internal server error while modifying therapy."});
         }
 
     }

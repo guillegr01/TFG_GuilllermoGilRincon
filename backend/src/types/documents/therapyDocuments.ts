@@ -12,3 +12,9 @@ export type therapyInput = {
     insulinActive: number
     glucoseLimits: GlucoseLimits
 }
+
+export type TherapyInputUpdate = {
+    ratios?: InsulinRatio[]
+    insulinActive?: number
+    glucoseLimits?: GlucoseLimits
+}

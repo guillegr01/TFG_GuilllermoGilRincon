@@ -1,6 +1,6 @@
 
 import { ObjectId } from "mongodb";
-import { therapyInput } from "../types/documents/therapyDocuments";
+import { therapyInput, TherapyInputUpdate } from "../types/documents/therapyDocuments";
 import { TherapyCollection, UserCollection } from "../database/collections";
 import { Therapy, InsulinRatio } from "../types/types";
 import { validPeriods } from "../types/documents/carbohydrateIntakeDocument";
@@ -111,4 +111,84 @@ export const getTherapyByUserService = async(userId: string): Promise<Therapy> =
     const Therapy = fromModelToTherapy(TherapyExists);
 
     return Therapy;
+}
+
+
+/**
+ * * putTherapyByIdService
+ * ? METHOD: PUT
+ * @param TherapyId 
+ * @param tiu 
+ * @returns Promise<Therapy>
+ */
+export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInputUpdate): Promise<Therapy> => {
+
+    if(!ObjectId.isValid(TherapyId)) throw new Error("Therapy id is invalid.");
+
+    if(tiu.ratios===undefined && tiu.insulinActive===undefined && tiu.glucoseLimits===undefined) {
+        throw new Error("One or many required fields were not provided for update.");
+    }
+
+    //insulinActive field validation
+    if(tiu.insulinActive!==undefined) {
+        if(typeof tiu.insulinActive !== "number") throw new Error("Insulin Active field must be a number.");
+        if(tiu.insulinActive <= 0) throw new Error("Insulin Active cannot be introduced (must be greater than 0).");
+    }
+
+    //ratios field validation
+    if(tiu.ratios!==undefined) {
+        if(!Array.isArray(tiu.ratios) || tiu.ratios.length === 0) throw new Error("Ratios field must be a non-empty array.");
+        tiu.ratios.forEach((rt: InsulinRatio) => {
+
+            //period ratio validation
+            if(!validPeriods.includes(rt.period)) throw new Error("Invalid period for ratios.");
+
+            //ratio field validation
+            if(typeof rt.ratio !== "number") throw new Error("ratio field must be a number.");
+            if(rt.ratio <= 0) throw new Error("Ratio cannot be introduced (must be greater than 0).");
+
+            //ratiocorrection field validation
+            if(typeof rt.ratioCorrection !== "number") throw new Error("ratio correction field must be a number.");
+            if(rt.ratioCorrection <= 0) throw new Error("Ratio correction cannot be introduced (must be greater than 0).");
+
+        });
+    }
+
+    //glucose limits validation
+    if(tiu.glucoseLimits!==undefined) {
+
+        if( typeof tiu.glucoseLimits.lowLimit !== "number" ||
+            typeof tiu.glucoseLimits.inRangeLimit !== "number" ||
+            typeof tiu.glucoseLimits.highLimit !== "number" ||
+            typeof tiu.glucoseLimits.veryHighLimit !== "number"
+        ) {
+            throw new Error ("Glucose Limits must be a number");
+        } 
+
+        if( tiu.glucoseLimits.lowLimit <= 0 ||
+            tiu.glucoseLimits.inRangeLimit <= 0 ||
+            tiu.glucoseLimits.highLimit <= 0 ||
+            tiu.glucoseLimits.veryHighLimit <= 0
+        ) {
+            throw new Error("Glucose Limits cannot be introduced (must be greater than 0).");
+        }
+
+        if( tiu.glucoseLimits.lowLimit >= tiu.glucoseLimits.inRangeLimit ||
+            tiu.glucoseLimits.inRangeLimit >= tiu.glucoseLimits.highLimit ||
+            tiu.glucoseLimits.highLimit >= tiu.glucoseLimits.veryHighLimit
+        ) {
+            throw new Error("Invalid glucoseLimits configuration");
+        }
+
+    }
+
+    const TherapyModificationResult = await TherapyCollection.findOneAndUpdate(
+        {_id: new ObjectId(TherapyId)},
+        {$set: tiu}, {returnDocument: "after"});
+
+    if(!TherapyModificationResult) throw new Error("Modified Therapy not found.");
+
+    const modifiedTherapy = fromModelToTherapy(TherapyModificationResult);
+
+    return modifiedTherapy;
 }
