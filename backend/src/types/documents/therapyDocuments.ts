@@ -8,13 +8,15 @@ import { GlucoseLimits, InsulinRatio } from "../types"
 
 export type therapyInput = {
     userId: string
-    ratios: InsulinRatio[]
+    ratios: InsulinRatio[],
+    glucoseTarget: number,
     insulinActive: number
     glucoseLimits: GlucoseLimits
 }
 
 export type TherapyInputUpdate = {
-    ratios?: InsulinRatio[]
-    insulinActive?: number
+    ratios?: InsulinRatio[],
+    glucoseTarget?: number,
+    insulinActive?: number,
     glucoseLimits?: GlucoseLimits
 }

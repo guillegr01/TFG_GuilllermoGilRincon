@@ -57,6 +57,7 @@ export type Therapy = {
     id: string,                             //attribute id
     userId: string,                         //attribute userId
     ratios: InsulinRatio[],                 //attribute ratios
+    glucoseTarget: number,                  //attribute glucose target
     insulinActive: number,                  //attribute insulinActive
     glucoseLimits: GlucoseLimits,           //attribute glucoseLimits                 
 }
@@ -69,7 +70,7 @@ export type Therapy = {
 export type InsulinRatio = {
     period: "desayuno" | "comida" | "merienda" | "cena",    //attribute period
     ratio: number,                                          //attribute ratio (Ui/R) (R=10gr aprox)
-    ratioCorrection: number,                                //attribute ratioCorrection = sensibility factor ((mg/dl)/Ui)
+    sensibilityFactor: number,                                //attribute sensibility factor ((mg/dl)/Ui)
 }
 
 

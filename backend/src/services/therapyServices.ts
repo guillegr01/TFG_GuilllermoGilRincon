@@ -22,7 +22,7 @@ import { fromModelToTherapy } from "../utils/converters";
  */
 export const postTherapyService = async (t_i: therapyInput): Promise<Therapy> => {
 
-    if(!t_i.userId || t_i.ratios === undefined || t_i.insulinActive === undefined || t_i.glucoseLimits === undefined) {
+    if(!t_i.userId || t_i.ratios===undefined || t_i.glucoseTarget===undefined || t_i.insulinActive===undefined || t_i.glucoseLimits===undefined) {
         throw new Error("Some required field for therapy wasn´t inserted correctly.");
     }
 
@@ -34,6 +34,10 @@ export const postTherapyService = async (t_i: therapyInput): Promise<Therapy> =>
 
     const existingTherapy = await TherapyCollection.findOne({ userId: t_i.userId});
     if(existingTherapy) throw new Error("User already has a therapy associated");
+
+    //glucoseTarget field validation
+    if(typeof t_i.glucoseTarget !== "number") throw new Error("Glucose Target field must be a number.");
+    if(t_i.glucoseTarget <= t_i.glucoseLimits.lowLimit) throw new Error(`Glucose Target cannot be lower than ${t_i.glucoseLimits.lowLimit} and higher than ${t_i.glucoseLimits.inRangeLimit}`);
 
     //insulinActive field validation
     if(typeof t_i.insulinActive !== "number") throw new Error("Insulin Active field must be a number.");
@@ -50,9 +54,9 @@ export const postTherapyService = async (t_i: therapyInput): Promise<Therapy> =>
         if(typeof rt.ratio !== "number") throw new Error("ratio field must be a number.");
         if(rt.ratio <= 0) throw new Error("Ratio cannot be introduced (must be greater than 0).");
 
-        //ratiocorrection field validation
-        if(typeof rt.ratioCorrection !== "number") throw new Error("ratio correction field must be a number.");
-        if(rt.ratioCorrection <= 0) throw new Error("Ratio correction cannot be introduced (must be greater than 0).");
+        //sensibilityFactor field validation
+        if(typeof rt.sensibilityFactor !== "number") throw new Error("sensibility factor field must be a number.");
+        if(rt.sensibilityFactor <= 0) throw new Error("sensibility factor cannot be introduced (must be greater than 0).");
 
     });
 
@@ -83,6 +87,7 @@ export const postTherapyService = async (t_i: therapyInput): Promise<Therapy> =>
     const therapyToDDBB: TherapyModel = {
         userId: t_i.userId,
         ratios: t_i.ratios,
+        glucoseTarget: t_i.glucoseTarget,
         insulinActive: t_i.insulinActive,
         glucoseLimits: t_i.glucoseLimits
     }
@@ -125,8 +130,25 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
 
     if(!ObjectId.isValid(TherapyId)) throw new Error("Therapy id is invalid.");
 
-    if(tiu.ratios===undefined && tiu.insulinActive===undefined && tiu.glucoseLimits===undefined) {
+    if(tiu.ratios===undefined && tiu.glucoseTarget===undefined && tiu.insulinActive===undefined && tiu.glucoseLimits===undefined) {
         throw new Error("One or many required fields were not provided for update.");
+    }
+
+    const therapyToModify = await TherapyCollection.findOne({_id: new ObjectId(TherapyId)});
+    if(!therapyToModify) throw new Error("Therapy not found.");
+
+    //Merged therapy entity (existingTherapy and TherapyInputUpdate)
+    const updatedTherapy = {
+        ...therapyToModify,
+        ...tiu
+    };
+
+    //glucoseTarget field validation
+    if(tiu.glucoseTarget!==undefined) {
+        if(typeof tiu.glucoseTarget !== "number") throw new Error("Glucose Target field must be a number.");
+        if(tiu.glucoseTarget <= updatedTherapy.glucoseLimits.lowLimit || tiu.glucoseTarget >= updatedTherapy.glucoseLimits.inRangeLimit) {
+            throw new Error(`Glucose Target cannot be lower than ${updatedTherapy.glucoseLimits.lowLimit} and higher than ${updatedTherapy.glucoseLimits.inRangeLimit}`);
+        }
     }
 
     //insulinActive field validation
@@ -147,9 +169,9 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
             if(typeof rt.ratio !== "number") throw new Error("ratio field must be a number.");
             if(rt.ratio <= 0) throw new Error("Ratio cannot be introduced (must be greater than 0).");
 
-            //ratiocorrection field validation
-            if(typeof rt.ratioCorrection !== "number") throw new Error("ratio correction field must be a number.");
-            if(rt.ratioCorrection <= 0) throw new Error("Ratio correction cannot be introduced (must be greater than 0).");
+            //sensibilityFactor field validation
+            if(typeof rt.sensibilityFactor !== "number") throw new Error("sensibility factor field must be a number.");
+            if(rt.sensibilityFactor <= 0) throw new Error("sensibility factor cannot be introduced (must be greater than 0).");
 
         });
     }

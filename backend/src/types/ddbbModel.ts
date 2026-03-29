@@ -53,6 +53,7 @@ export type CarbohydrateIntakeModel = OptionalId<{
 export type TherapyModel = OptionalId<{
     userId: string,
     ratios: InsulinRatio[],
+    glucoseTarget: number,
     insulinActive: number,
     glucoseLimits: GlucoseLimits,
 }>;
