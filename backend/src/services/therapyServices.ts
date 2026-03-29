@@ -93,3 +93,22 @@ export const postTherapyService = async (t_i: therapyInput): Promise<Therapy> =>
 
     return finalTherapy;
 }
+
+
+/**
+ * * getTherapyByUserService
+ * ? METHOD: GET
+ * @param userId 
+ * @returns Promise<Therapy>
+ */
+export const getTherapyByUserService = async(userId: string): Promise<Therapy> => {
+
+    if(!ObjectId.isValid(userId)) throw new Error (`Therapy user id ${userId} is invalid.`);
+
+    const TherapyExists = await TherapyCollection.findOne({userId: userId});
+    if(!TherapyExists) throw new Error(`Therapy with userId: ${userId} not found.`);
+
+    const Therapy = fromModelToTherapy(TherapyExists);
+
+    return Therapy;
+}

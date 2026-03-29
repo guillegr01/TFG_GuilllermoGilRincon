@@ -1,5 +1,5 @@
 import express from "express";
-import { postTherapyController } from "../controllers/therapyControllers";
+import { postTherapyController, getTherapyByUserController } from "../controllers/therapyControllers";
 
 /**
  * * This file is used to route the different endpoints associated with the Therapy entity.
@@ -8,3 +8,4 @@ import { postTherapyController } from "../controllers/therapyControllers";
 export const router = express.Router();
 
 router.post("/", postTherapyController);
+router.get("/user/:userId", getTherapyByUserController);
