@@ -137,12 +137,6 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
     const therapyToModify = await TherapyCollection.findOne({_id: new ObjectId(TherapyId)});
     if(!therapyToModify) throw new Error("Therapy not found.");
 
-    //Merged therapy entity (existingTherapy and TherapyInputUpdate)
-    const updatedTherapy = {
-        ...therapyToModify,
-        ...tiu
-    };
-
     //insulinActive field validation
     if(tiu.insulinActive!==undefined) {
         if(typeof tiu.insulinActive !== "number") throw new Error("Insulin Active field must be a number.");
@@ -168,11 +162,14 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
         });
     }
 
+    const glucoseTarget = tiu.glucoseTarget ?? therapyToModify.glucoseTarget;
+    const glucoseLimits = tiu.glucoseLimits ?? therapyToModify.glucoseLimits;
+
     //glucoseTarget field validation
     if(tiu.glucoseTarget!==undefined) {
         if(typeof tiu.glucoseTarget !== "number") throw new Error("Glucose Target field must be a number.");
-        if(tiu.glucoseTarget <= updatedTherapy.glucoseLimits.lowLimit || tiu.glucoseTarget >= updatedTherapy.glucoseLimits.inRangeLimit) {
-            throw new Error(`Glucose Target cannot be lower than ${updatedTherapy.glucoseLimits.lowLimit} and higher than ${updatedTherapy.glucoseLimits.inRangeLimit}`);
+        if(tiu.glucoseTarget <= glucoseLimits.lowLimit || tiu.glucoseTarget >= glucoseLimits.inRangeLimit) {
+            throw new Error(`Glucose Target cannot be lower than ${glucoseLimits.lowLimit} and higher than ${glucoseLimits.inRangeLimit}`);
         }
     }
 
@@ -202,8 +199,8 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
             throw new Error("Invalid glucoseLimits configuration");
         }
 
-        if(tiu.glucoseLimits.lowLimit >= updatedTherapy.glucoseTarget || tiu.glucoseLimits.inRangeLimit <= updatedTherapy.glucoseTarget) {
-            throw new Error(`Glucose low limit cannot be higher than ${updatedTherapy.glucoseTarget} and in range limit cannot be lower than ${updatedTherapy.glucoseTarget}.`);
+        if(tiu.glucoseLimits.lowLimit >= glucoseTarget || tiu.glucoseLimits.inRangeLimit <= glucoseTarget) {
+            throw new Error(`Glucose low limit cannot be higher than ${glucoseTarget} and in range limit cannot be lower than ${glucoseTarget}.`);
         }
 
     }
