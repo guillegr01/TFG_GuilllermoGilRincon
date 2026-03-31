@@ -114,7 +114,7 @@ export const getCarbohydrateIntakeByUserIdService = async (userId: string): Prom
     const userDDBB = await UserCollection.findOne({_id: new ObjectId(userId)});
     if(!userDDBB) throw new Error("User not found.");
 
-    const carbohydrateIntakesDDBB = await CarbohydrateIntakeCollection.find({userId: userId}).sort({date_hour: -1}).toArray();
+    const carbohydrateIntakesDDBB = await CarbohydrateIntakeCollection.find({userId: userId}).sort({date_hour: -1}).limit(100).toArray();
 
     const carboHydrateIntakes = carbohydrateIntakesDDBB.map((cim: CarbohydrateIntakeModel) => {
         return fromModelToCarbohydrateIntake(cim);
@@ -127,7 +127,6 @@ export const getCarbohydrateIntakeByUserIdService = async (userId: string): Prom
 
 /**
  * * putCarbohydrateIntakeByIdService
- * TODO: recalculate totalBolus if grams or glucosevalue is modified
  * ? METHOD: PUT
  * @param chi_ui 
  * @returns Promise<CarbohydrateIntake>

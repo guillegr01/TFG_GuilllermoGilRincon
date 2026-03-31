@@ -5,6 +5,7 @@ import { router as userRouter } from './routers/userRoutes';
 import { router as glucoseRegisterRouter } from './routers/glucoseRegisterRouter';
 import { router as carbohydrateIntakeRouter } from './routers/carbohydrateIntakeRouter';
 import { router as therapyRouter } from './routers/therapyRouter';
+import { router as dashboardRouter } from './routers/dashboardRouter';
 
 /**
  * * This one is the main file that is gonna be executed.
@@ -27,6 +28,7 @@ app.use("/user", userRouter);
 app.use("/glucose-register", glucoseRegisterRouter);
 app.use("/carbohydrate-intake", carbohydrateIntakeRouter);
 app.use("/therapy", therapyRouter);
+app.use("/dashboard", dashboardRouter);
 
 
 //endpoint prueba

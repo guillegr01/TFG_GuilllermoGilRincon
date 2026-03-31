@@ -83,7 +83,7 @@ export const getGlucoseRegistersByUserIdService = async (userId: string): Promis
     if(!userDDBB) throw new Error("User not found.");
 
     //.sort({date_hour: -1}) sorts the glucose registers by descending date (the most recent date first)
-    const glucoseRegistersDDBB = await GlucoseRegisterCollection.find({userId: userId}).sort({date_hour: -1}).toArray();
+    const glucoseRegistersDDBB = await GlucoseRegisterCollection.find({userId: userId}).sort({date_hour: -1}).limit(100).toArray();
 
     const glucoseRegisters = glucoseRegistersDDBB.map((grm: GlucoseRegisterModel) => { return fromModelToGlucoseRegister(grm)});
 

@@ -84,3 +84,14 @@ export type GlucoseLimits = {
     highLimit: number,                      //attribute highLimit
     veryHighLimit: number,                  //attribute veryHighLimit   
 }
+
+/**
+ * * Application type Dashboard
+ * ! Non persistant type -> No DDBB Model
+ */
+export type Dashboard = {
+    user: User                              //attribute user
+    therapy: Therapy | null                 //attribute therapy
+    glucoseRegisters: GlucoseRegister[]     //attribute glucoseRegisters
+    meals: CarbohydrateIntake[]             //attribute meals    
+}
