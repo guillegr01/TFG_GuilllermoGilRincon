@@ -71,6 +71,7 @@ export const fromModelToTherapy = (tm: TherapyModel): Therapy => {
         id: tm._id!.toString(),
         userId: tm.userId,
         ratios: tm.ratios,
+        glucoseTarget: tm.glucoseTarget,
         insulinActive: tm.insulinActive,
         glucoseLimits: tm.glucoseLimits
     }

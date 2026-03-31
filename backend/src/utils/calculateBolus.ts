@@ -1,7 +1,5 @@
 import { InsulinRatio, Therapy } from "../types/types";
 
-
-
 /**
  * * calculateBolus
  * Info: this function shall calculat the specific insuline bolus for the user.
@@ -22,7 +20,6 @@ export const calculateBolus = (grams: number, glucoseValue: number, period: stri
 
     if(!therapyRatio) throw new Error(`No ratio defined for period: ${period}`);
 
-
     //calculate portions (1portion = 10gr)
     const portions = grams/10;
 
@@ -30,7 +27,7 @@ export const calculateBolus = (grams: number, glucoseValue: number, period: stri
     const estandarBolus = therapyRatio.ratio*portions;
 
     //calculate ratioCorrection
-    let correctionBolus;
+    let correctionBolus: number;
     if(glucoseValue<=therapy.glucoseTarget) {
         correctionBolus = 0;
     } else {
@@ -40,5 +37,5 @@ export const calculateBolus = (grams: number, glucoseValue: number, period: stri
     //calculate totalBolus
     const totalBolus = estandarBolus + correctionBolus;
 
-    return totalBolus;
+    return Math.round(totalBolus * 2) / 2;;
 }

@@ -1,9 +1,10 @@
 import { ObjectId } from "mongodb";
 import { CarbohydrateIntake } from "../types/types";
 import { CarbohydrateIntakeModel } from '../types/ddbbModel';
-import { CarbohydrateIntakeCollection, UserCollection } from "../database/collections";
-import { fromModelToCarbohydrateIntake } from "../utils/converters";
+import { CarbohydrateIntakeCollection, TherapyCollection, UserCollection } from "../database/collections";
+import { fromModelToCarbohydrateIntake, fromModelToTherapy } from "../utils/converters";
 import { CarbohydrateIntakeInput, CarbohydrateIntakeUpdateInput, validPeriods } from "../types/documents/carbohydrateIntakeDocument";
+import { calculateBolus } from "../utils/calculateBolus";
 
 
 
@@ -15,7 +16,6 @@ import { CarbohydrateIntakeInput, CarbohydrateIntakeUpdateInput, validPeriods } 
 
 
 /**
- * TODO: obtain therapy associated with the user and calculate totalBolus.
  * * postCarbohydrateIntakeService
  * ? METHOD: POST
  * @param chi_i 
@@ -27,9 +27,8 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
         throw new Error("Some required field for carbohydrate intake wasn´t inserted correctly.");
     }
 
+    //userId field validation
     if(!ObjectId.isValid(chi_i.userId)) throw new Error("The field user id associated with carbohydrate intake is invalid.");
-
-    if(!validPeriods.includes(chi_i.period)) throw new Error("Inserted period is invalid.");
 
     const userAssociatedExists = await UserCollection.findOne({_id: new ObjectId(chi_i.userId)});
     if(!userAssociatedExists) throw new Error("The inserted userID does not exists in DDBB.");
@@ -43,7 +42,7 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
     if(typeof chi_i.glucoseValue !== "number") throw new Error("Glucose Value field must be a number.");
     if(chi_i.glucoseValue <= 40 || chi_i.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
 
-    //period filed validation
+    //period field validation
     if(typeof chi_i.period !== "string") throw new Error("Period field must be a string.");
     if(!validPeriods.includes(chi_i.period)) throw new Error("Inserted period is invalid.");
 
@@ -56,8 +55,12 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
     }
 
     // obtener therapy
+    const userTherapyDDBB = await TherapyCollection.findOne({userId: chi_i.userId});
+    if(!userTherapyDDBB) throw new Error("User therapy not found.");
+    const userTherapy = fromModelToTherapy(userTherapyDDBB);
 
     //calcular totalBolus
+    const totalBolus = calculateBolus(chi_i.grams, chi_i.glucoseValue, chi_i.period, userTherapy);
 
     const carbohydrateIntakeToDDBB: CarbohydrateIntakeModel = {
         userId: chi_i.userId,
@@ -66,8 +69,8 @@ export const postCarbohydrateIntakeService = async (chi_i: CarbohydrateIntakeInp
         period: chi_i.period,
         date_hour: new Date(), 
         description: chi_i.description,
-        foodImages: chi_i.foodImages
-        //totalBolus
+        foodImages: chi_i.foodImages,
+        totalBolus: totalBolus
     }
 
     const { insertedId } = await CarbohydrateIntakeCollection.insertOne(carbohydrateIntakeToDDBB);
@@ -133,30 +136,61 @@ export const putCarbohydrateIntakeByIdService = async (carbohydrateIntakeId: str
 
     if(!ObjectId.isValid(carbohydrateIntakeId)) throw new Error("The field carbohydrate intake id is invalid.");
 
-    if(chi_ui.grams===undefined && chi_ui.glucoseValue===undefined && chi_ui.period===undefined && chi_ui.description===undefined) throw new Error("One or many required fields were not provided for update.");
+    if(chi_ui.grams===undefined && chi_ui.glucoseValue===undefined && chi_ui.period===undefined && chi_ui.description===undefined) {
+        throw new Error("One or many required fields were not provided for update.");
+    }
 
+    //checking if there is an existing meal to update with the provided ID
+    const carbohydrateIntakeToModify = await CarbohydrateIntakeCollection.findOne({_id: new ObjectId(carbohydrateIntakeId)});
+    if(!carbohydrateIntakeToModify) throw new Error("Meal not found.");
+
+    //grams field validation
     if(chi_ui.grams !== undefined) {
         if(typeof chi_ui.grams !== "number") throw new Error("Grams field must be a number.");
         if(chi_ui.grams<0) throw new Error("Carbohydrates grams cannot be introduced (value out of range).");
     }
 
+    //glucose value field validation
     if(chi_ui.glucoseValue !== undefined) {
         if(typeof chi_ui.glucoseValue !== "number") throw new Error("Glucose Value field must be a number.");
         if(chi_ui.glucoseValue <= 40 || chi_ui.glucoseValue >= 400) throw new Error("Glucose Value cannot be introduced (value out of range).");
     }
 
+    //period field validation
     if(chi_ui.period !== undefined) {
         if(typeof chi_ui.period !== "string") throw new Error("Period field must be a string.")
         if(!validPeriods.includes(chi_ui.period)) throw new Error("Inserted period is invalid.");
     }
 
+    //description field validation
     if(chi_ui.description !== undefined) {
         if(typeof chi_ui.description !== "string") throw new Error("Description field must be a string.")
     }
 
+    //recalculate Bolus
+    const fieldsToUpdate: Partial<CarbohydrateIntakeModel> = {
+        ...chi_ui
+    }
+
+    if(chi_ui.grams!==undefined || chi_ui.glucoseValue!==undefined || chi_ui.period!==undefined) {
+
+        const grams = chi_ui.grams ?? carbohydrateIntakeToModify.grams;
+        const glucoseValue = chi_ui.glucoseValue ?? carbohydrateIntakeToModify.glucoseValue;
+        const period = chi_ui.period ?? carbohydrateIntakeToModify.period;
+
+        //obtain user therapy
+        const userTherapyDDBB = await TherapyCollection.findOne({userId: carbohydrateIntakeToModify.userId});
+        if(!userTherapyDDBB) throw new Error("User therapy not found.");
+
+        const userTherapy = fromModelToTherapy(userTherapyDDBB);
+        const totalBolus = calculateBolus(grams, glucoseValue, period, userTherapy);
+        fieldsToUpdate.totalBolus = totalBolus;
+    }
+
+    //update fields in the DDBB
     const carbohydrateIntakeModificationResult = await CarbohydrateIntakeCollection.findOneAndUpdate(
         {_id: new ObjectId(carbohydrateIntakeId)},
-        {$set: chi_ui}, { returnDocument: "after"});
+        {$set: fieldsToUpdate}, { returnDocument: "after"});
 
     if(!carbohydrateIntakeModificationResult) throw new Error("Modified carbohydrates intake not found.");
 

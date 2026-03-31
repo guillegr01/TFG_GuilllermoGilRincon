@@ -143,14 +143,6 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
         ...tiu
     };
 
-    //glucoseTarget field validation
-    if(tiu.glucoseTarget!==undefined) {
-        if(typeof tiu.glucoseTarget !== "number") throw new Error("Glucose Target field must be a number.");
-        if(tiu.glucoseTarget <= updatedTherapy.glucoseLimits.lowLimit || tiu.glucoseTarget >= updatedTherapy.glucoseLimits.inRangeLimit) {
-            throw new Error(`Glucose Target cannot be lower than ${updatedTherapy.glucoseLimits.lowLimit} and higher than ${updatedTherapy.glucoseLimits.inRangeLimit}`);
-        }
-    }
-
     //insulinActive field validation
     if(tiu.insulinActive!==undefined) {
         if(typeof tiu.insulinActive !== "number") throw new Error("Insulin Active field must be a number.");
@@ -174,6 +166,14 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
             if(rt.sensibilityFactor <= 0) throw new Error("sensibility factor cannot be introduced (must be greater than 0).");
 
         });
+    }
+
+    //glucoseTarget field validation
+    if(tiu.glucoseTarget!==undefined) {
+        if(typeof tiu.glucoseTarget !== "number") throw new Error("Glucose Target field must be a number.");
+        if(tiu.glucoseTarget <= updatedTherapy.glucoseLimits.lowLimit || tiu.glucoseTarget >= updatedTherapy.glucoseLimits.inRangeLimit) {
+            throw new Error(`Glucose Target cannot be lower than ${updatedTherapy.glucoseLimits.lowLimit} and higher than ${updatedTherapy.glucoseLimits.inRangeLimit}`);
+        }
     }
 
     //glucose limits validation
@@ -200,6 +200,10 @@ export const putTherapyByIdService = async (TherapyId: string, tiu: TherapyInput
             tiu.glucoseLimits.highLimit >= tiu.glucoseLimits.veryHighLimit
         ) {
             throw new Error("Invalid glucoseLimits configuration");
+        }
+
+        if(tiu.glucoseLimits.lowLimit >= updatedTherapy.glucoseTarget || tiu.glucoseLimits.inRangeLimit <= updatedTherapy.glucoseTarget) {
+            throw new Error(`Glucose low limit cannot be higher than ${updatedTherapy.glucoseTarget} and in range limit cannot be lower than ${updatedTherapy.glucoseTarget}.`);
         }
 
     }

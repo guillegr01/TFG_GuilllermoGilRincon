@@ -43,7 +43,7 @@ export type CarbohydrateIntakeModel = OptionalId<{
     date_hour: Date,
     description?: string,
     foodImages?: string[],
-    totalBolus?: number,
+    totalBolus: number,
 }>;
 
 
