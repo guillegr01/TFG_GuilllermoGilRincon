@@ -37,5 +37,5 @@ export const calculateBolus = (grams: number, glucoseValue: number, period: stri
     //calculate totalBolus
     const totalBolus = estandarBolus + correctionBolus;
 
-    return Math.round(totalBolus * 2) / 2;;
+    return Math.round(totalBolus * 2) / 2;
 }
