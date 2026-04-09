@@ -8,6 +8,8 @@ node_modules/
 .expo/  
 .expo-shared/
 expo-env.d.ts
+frontend/expo-env.d.ts
+frontend/.gitignore
 
 # Builds (generated builds)
 dist/
