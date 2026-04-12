@@ -1,6 +1,7 @@
 import { useDashboard } from "@/src/hooks/useDashBoard";
 import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import GlucoseCard from "../../components/GlucoseCard";
+import GlucoseRegisterChart from "../../components/GlucoseRegistersChart";
 
 
 /**
@@ -25,7 +26,8 @@ export default function DashboardTab() {
     const limits = data.therapy.glucoseLimits;
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {paddingBottom: 40}]}>
+
             {glucose !== undefined && (
                 <GlucoseCard
                 value={glucose}
@@ -36,12 +38,20 @@ export default function DashboardTab() {
                 />
             )}
 
+            <GlucoseRegisterChart 
+                data={data.glucoseRegisters}
+                low={limits.lowLimit}
+                inRange={limits.inRangeLimit}
+                high={limits.highLimit}
+            />
+
             <View style={styles.infoCard}>
                 <Text style={styles.infoTitle}>Last Meal</Text>
                 <Text>Carbs: {meal?.grams ?? "-"}</Text>
                 <Text>Bolus: {meal?.totalBolus ?? "-"}</Text>
                 <Text>Period: {meal?.period ?? "-"}</Text>
             </View>
+
         </View>
     );
 }

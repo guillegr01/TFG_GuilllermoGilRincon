@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
+//components props
 type Props = {
     value: number;
     low: number;
@@ -8,6 +9,12 @@ type Props = {
     veryHigh: number;
 };
 
+
+/**
+ * * GlucoseCard
+ * @param { value, low, inRange, high, veryHigh }: Props 
+ * @returns 
+ */
 export default function GlucoseCard({ value, low, inRange, high, veryHigh }: Props) {
     const getColor = () => {
         if (value < low) return "#ef4444"; 
@@ -30,6 +37,8 @@ export default function GlucoseCard({ value, low, inRange, high, veryHigh }: Pro
     );
 }
 
+
+//styles sheet for glucose card component
 const styles = StyleSheet.create({
     card: {
         borderWidth: 2,
