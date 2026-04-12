@@ -21,7 +21,7 @@ import { router as dashboardRouter } from './routers/dashboardRouter';
 const app = express();
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 //ROUTES
 app.use("/user", userRouter);
@@ -42,7 +42,7 @@ const serverHandler = async () => {
         
         await connectDDBB();
 
-        app.listen(PORT, () => {
+        app.listen(PORT, "0.0.0.0", () => {
             console.log(`Server running on port ${PORT}.`);
         });
 
