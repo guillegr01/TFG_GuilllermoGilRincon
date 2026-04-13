@@ -19,7 +19,7 @@ export default function GlucoseCard({ value, low, inRange, high, veryHigh }: Pro
     const getColor = () => {
         if (value < low) return "#ef4444"; 
         if (value <= inRange) return "#10b981"; 
-        if (value <= high) return "#f1e425e3";
+        if (value <= high) return "#ffd900e3";
         if (value <= veryHigh) return "#fb923c";
         return "#fc9a2a"; 
     };

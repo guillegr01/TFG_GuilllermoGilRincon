@@ -1,4 +1,4 @@
-import { View, Dimensions } from "react-native";
+import { View, Dimensions, ScrollView } from "react-native";
 import Svg, { Line, Rect, Polyline, Text as SvgText, Circle } from "react-native-svg";
 
 
@@ -18,7 +18,14 @@ type Props = {
  */
 export default function GlucoseRegisterChart({ data, low, inRange, high }: Props) {
 
-    const width = Dimensions.get("window").width - 40;
+    const sorted = [...data].sort(
+        (a, b) => new Date(a.date_hour).getTime() - new Date(b.date_hour).getTime()
+    );
+
+    //screen dinamic width for grafic
+    const screenWidth = Dimensions.get("window").width - 40;
+    const pointSpacing = 50; //space between glucose points
+    const width = Math.max(screenWidth, data.length * pointSpacing);
 
     const height = 220;
     const paddingTop = 20;
@@ -27,24 +34,20 @@ export default function GlucoseRegisterChart({ data, low, inRange, high }: Props
 
     const paddingLeft = 30;
     const paddingRight = 10;
-    const chartWidth = width - paddingLeft - paddingRight;
+    const chartWidth = sorted.length * pointSpacing;
 
     const MIN = 50;
     const MAX = 400;
 
-    const sorted = [...data].sort(
-        (a, b) => new Date(a.date_hour).getTime() - new Date(b.date_hour).getTime()
-    );
-
     const scaleY = (value: number) =>
         paddingTop + chartHeight - ((value - MIN) / (MAX - MIN)) * chartHeight;
 
-    const stepX = chartWidth / (sorted.length - 1);
+    const stepX = pointSpacing;
 
     const points = sorted.map((item, i) => `${paddingLeft + i * stepX},${scaleY(item.glucoseValue)}`).join(" ");
 
     return (
-        <View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <Svg width={width} height={height}>
 
                 {/* inRange zone (70 - 180) */}
@@ -106,6 +109,6 @@ export default function GlucoseRegisterChart({ data, low, inRange, high }: Props
                 ))}
 
             </Svg>
-        </View>
+        </ScrollView>
     );
 }

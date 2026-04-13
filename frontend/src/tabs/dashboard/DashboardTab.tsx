@@ -26,7 +26,7 @@ export default function DashboardTab() {
     const limits = data.therapy.glucoseLimits;
 
     return (
-        <View style={[styles.container, {paddingBottom: 40}]}>
+        <View style={[styles.container, {paddingBottom: 30}]}>
 
             {glucose !== undefined && (
                 <GlucoseCard
