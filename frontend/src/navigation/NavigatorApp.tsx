@@ -4,7 +4,7 @@ import NavigatorTab from "./NavigatorTab";
 export default function NavigatorApp() {
     return (
         <NavigationContainer>
-        <NavigatorTab />
+            <NavigatorTab />
         </NavigationContainer>
     );
 }

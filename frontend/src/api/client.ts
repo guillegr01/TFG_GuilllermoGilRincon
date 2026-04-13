@@ -4,14 +4,31 @@
  */
 
 //const API_URL = "http://192.168.0.19:3000";
-const API_URL = "http://10.0.2.2:3000"; //For android
+export const API_URL = "http://10.0.2.2:3000"; //For android
 
 /**
  * * getClientApi
  * @param endpoint 
- * @returns 
+ * @returns res.json()
  */
-export async function getClientApi(endpoint: string) {
-    const res = await fetch(`${API_URL}${endpoint}`);
+export const getClientApi = async (endpoint: string) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}`);
+    return res.json();
+}
+
+/**
+ * * postClientApi
+ * @param endpoint 
+ * @returns res.json()
+ */
+export const postClientApi = async (endpoint: string, body: any) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}`, 
+        {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+    });
     return res.json();
 }

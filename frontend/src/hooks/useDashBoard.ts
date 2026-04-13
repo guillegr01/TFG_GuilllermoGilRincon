@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { getClientApi } from "../api/client";
-
 
 /**
  * * useDashboard
@@ -12,20 +12,23 @@ export function useDashboard(userId: string) {
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchDashboard() {
-            try {
-                const res = await getClientApi(`/dashboard/user/${userId}`);
-                setData(res);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
+    async function fetchDashboard() {
+        try {
+            const res = await getClientApi(`/dashboard/user/${userId}`);
+            setData(res);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
+    }
 
-        fetchDashboard();
-    }, [userId]);
+    useFocusEffect(
+        useCallback(() => {
+            setLoading(true);
+            fetchDashboard();
+        }, [userId])
+    );
 
     return { data, loading };
 

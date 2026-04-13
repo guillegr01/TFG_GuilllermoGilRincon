@@ -26,7 +26,7 @@ const PORT = Number(process.env.PORT) || 3000;
 //ROUTES
 app.use("/user", userRouter);
 app.use("/glucose-register", glucoseRegisterRouter);
-app.use("/carbohydrate-intake", carbohydrateIntakeRouter);
+app.use("/meals", carbohydrateIntakeRouter);
 app.use("/therapy", therapyRouter);
 app.use("/dashboard", dashboardRouter);
 

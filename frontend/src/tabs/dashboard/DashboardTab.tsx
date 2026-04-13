@@ -1,7 +1,10 @@
 import { useDashboard } from "@/src/hooks/useDashBoard";
-import { View, Text, ActivityIndicator, StyleSheet } from "react-native";
-import GlucoseCard from "../../components/GlucoseCard";
-import GlucoseRegisterChart from "../../components/GlucoseRegistersChart";
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity  } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
+//Components
+import GlucoseCard from "../../components/dashboardComps/GlucoseCard";
+import GlucoseRegisterChart from "../../components/dashboardComps/GlucoseRegistersChart";
 
 
 /**
@@ -9,6 +12,8 @@ import GlucoseRegisterChart from "../../components/GlucoseRegistersChart";
  * @returns 
  */
 export default function DashboardTab() {
+
+    const navigation = useNavigation<any>();
 
     const { data, loading } = useDashboard("699c9b32d5e6e90cb3b09cf1");
 
@@ -52,6 +57,10 @@ export default function DashboardTab() {
                 <Text>Period: {meal?.period ?? "-"}</Text>
             </View>
 
+            <TouchableOpacity style={styles.addMealBtn} onPress={() => navigation.navigate("Meals", {screen: "Add Meal Tab"})}>
+                <Text style={styles.addMealBtnText}>+</Text>
+            </TouchableOpacity>
+
         </View>
     );
 }
@@ -73,4 +82,25 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 10,
     },
+
+    addMealBtn: {
+        position: "absolute",
+        bottom: 20,
+        right: 20,
+        backgroundColor: "#10B981",
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        elevation: 5,
+    },
+    addMealBtnText: {
+        color: "white",
+        fontSize: 30,
+        fontWeight: "bold",
+    },
+
 });
+
+
