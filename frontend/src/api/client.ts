@@ -32,3 +32,13 @@ export const postClientApi = async (endpoint: string, body: any) => {
     });
     return res.json();
 }
+
+/**
+ * * deleteClientApi
+ * @param endpoint 
+ * @param id 
+ */
+export const deleteClientApi = async (endpoint: string, id: string) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}/${id}`, {method: "DELETE"});
+    if(!res.ok) throw new Error("Error deleting");
+}

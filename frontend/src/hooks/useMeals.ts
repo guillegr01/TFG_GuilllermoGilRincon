@@ -30,5 +30,5 @@ export function useMeals(userId: string) {
         }, [userId])
     );
 
-    return { meals, loading };
+    return { meals, setMeals, loading };
 }

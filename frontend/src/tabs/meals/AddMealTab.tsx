@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
-import { API_URL, postClientApi } from "@/src/api/client";
+import { postClientApi } from "@/src/api/client";
 
 export default function AddMealTab() {
 
@@ -27,7 +27,7 @@ export default function AddMealTab() {
     //const API_URL = "http://10.0.2.2:3000"; // emulador
 
     // saving input body and fetch it
-    const handleSave = async () => {
+    const handleAdd = async () => {
         try {
             const body = {
                 userId: "699c9b32d5e6e90cb3b09cf1",
@@ -92,7 +92,7 @@ export default function AddMealTab() {
                 ))}
             </View>
 
-            <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleAdd}>
                 <Text style={styles.saveText}>Add Meal</Text>
             </TouchableOpacity>
         </View>
