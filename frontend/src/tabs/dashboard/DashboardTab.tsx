@@ -57,7 +57,7 @@ export default function DashboardTab() {
                 <Text>Period: {meal?.period ?? "-"}</Text>
             </View>
 
-            <TouchableOpacity style={styles.addMealBtn} onPress={() => navigation.navigate("Meals", {screen: "Add Meal Tab"})}>
+            <TouchableOpacity style={styles.addMealBtn} onPress={() => navigation.navigate("AddMeal")}>
                 <Text style={styles.addMealBtnText}>+</Text>
             </TouchableOpacity>
 

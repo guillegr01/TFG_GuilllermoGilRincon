@@ -1,10 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
-import NavigatorTab from "./NavigatorTab";
+import RootStack from "./RootStack";
 
 export default function NavigatorApp() {
     return (
         <NavigationContainer>
-            <NavigatorTab />
+            <RootStack />
         </NavigationContainer>
     );
 }

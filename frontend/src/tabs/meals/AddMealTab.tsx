@@ -4,7 +4,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 
 import { API_URL, postClientApi } from "@/src/api/client";
 
-export default function AddMealScreen() {
+export default function AddMealTab() {
 
     const navigation = useNavigation<any>();
 
@@ -38,7 +38,7 @@ export default function AddMealScreen() {
             };
 
             await postClientApi("/meals", body);
-            navigation.goBack();
+            navigation.navigate("MainTabs", {screen: "Meals"});
 
         } catch (error) {
             console.error("Error creating meal:", error);
