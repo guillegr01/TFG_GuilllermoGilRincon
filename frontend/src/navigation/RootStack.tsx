@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import NavigatorTab from "./NavigatorTab";
 import AddMealTab from "../tabs/meals/AddMealTab";
+import EditMealTab from "../tabs/meals/EditMealTab";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,14 @@ export default function RootStack() {
             component={AddMealTab}
             options={{title: "Add Meal", presentation: "fullScreenModal"}}
         />
+
+        {/*EditMeal Tab*/}
+        <Stack.Screen 
+            name="EditMeal"
+            component={EditMealTab}
+            options={{title:"Edit Meal"}}
+        />
+
         </Stack.Navigator>
     );
 }

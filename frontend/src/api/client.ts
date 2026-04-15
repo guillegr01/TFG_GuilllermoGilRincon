@@ -24,11 +24,11 @@ export const getClientApi = async (endpoint: string) => {
 export const postClientApi = async (endpoint: string, body: any) => {
     const res: Response = await fetch(`${API_URL}${endpoint}`, 
         {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body)
     });
     return res.json();
 }
@@ -41,4 +41,24 @@ export const postClientApi = async (endpoint: string, body: any) => {
 export const deleteClientApi = async (endpoint: string, id: string) => {
     const res: Response = await fetch(`${API_URL}${endpoint}/${id}`, {method: "DELETE"});
     if(!res.ok) throw new Error("Error deleting");
+}
+
+
+/**
+ * * putClientApi
+ * @param endpoint 
+ * @param body 
+ * @param id 
+ */
+export const putClientApi = async (endpoint: string, body: any, id:string) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}/${id}`, 
+        {
+            method: "PUT",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+    });
+
+    if(!res.ok) throw new Error("Error editing meal");
 }
