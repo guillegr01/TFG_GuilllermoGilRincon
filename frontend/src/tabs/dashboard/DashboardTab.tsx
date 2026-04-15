@@ -54,7 +54,7 @@ export default function DashboardTab() {
             {meal && (
             <>
                 <View>
-                    <Text style={styles.sectionTitle}>Last Meal</Text>
+                    <Text>Last Meal</Text>
                     <MealItem meal={meal} onEdit={() => {}} onDelete={() => {}} showMenu={false}/>
                 </View>
             </>
@@ -65,20 +65,17 @@ export default function DashboardTab() {
             </TouchableOpacity>
 
         </ScrollView>
+        
     );
 }
 
 //styles for DashBoard tab
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
-        backgroundColor: "#F9FAFB",
-        paddingBottom: 100
-    },
-    sectionTitle: {
-        fontWeight: "bold",
-        marginBottom: 10,
-        marginTop: 10
+        flexGrow: 1,
+        paddingHorizontal: 20,
+        paddingBottom: 120,
+        paddingTop: 20
     },
     addMealBtn: {
         position: "absolute",
@@ -96,8 +93,7 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 30,
         fontWeight: "bold"
-    },
-
+    }
 });
 
 
