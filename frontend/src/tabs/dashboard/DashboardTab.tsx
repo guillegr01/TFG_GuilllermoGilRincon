@@ -1,10 +1,11 @@
 import { useDashboard } from "@/src/hooks/useDashBoard";
-import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity  } from "react-native";
+import { View, Text, ActivityIndicator, StyleSheet, TouchableOpacity, ScrollView  } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 //Components
 import GlucoseCard from "../../components/dashboardComps/GlucoseCard";
 import GlucoseRegisterChart from "../../components/dashboardComps/GlucoseRegistersChart";
+import MealItem from "@/src/components/mealsComponents/mealItem";
 
 
 /**
@@ -31,7 +32,7 @@ export default function DashboardTab() {
     const limits = data.therapy.glucoseLimits;
 
     return (
-        <View style={[styles.container, {paddingBottom: 30}]}>
+        <ScrollView contentContainerStyle={styles.container}>
 
             {glucose !== undefined && (
                 <GlucoseCard
@@ -50,39 +51,35 @@ export default function DashboardTab() {
                 high={limits.highLimit}
             />
 
-            <View style={styles.infoCard}>
-                <Text style={styles.infoTitle}>Last Meal</Text>
-                <Text>Carbs: {meal?.grams ?? "-"}</Text>
-                <Text>Bolus: {meal?.totalBolus ?? "-"}</Text>
-                <Text>Period: {meal?.period ?? "-"}</Text>
-            </View>
+            {meal && (
+            <>
+                <View>
+                    <Text style={styles.sectionTitle}>Last Meal</Text>
+                    <MealItem meal={meal} onEdit={() => {}} onDelete={() => {}} showMenu={false}/>
+                </View>
+            </>
+            )}
 
             <TouchableOpacity style={styles.addMealBtn} onPress={() => navigation.navigate("AddMeal")}>
                 <Text style={styles.addMealBtnText}>+</Text>
             </TouchableOpacity>
 
-        </View>
+        </ScrollView>
     );
 }
 
 //styles for DashBoard tab
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         padding: 20,
         backgroundColor: "#F9FAFB",
+        paddingBottom: 100
     },
-    infoCard: {
-        backgroundColor: "white",
-        padding: 16,
-        borderRadius: 12,
-        elevation: 2,
-    },
-    infoTitle: {
+    sectionTitle: {
         fontWeight: "bold",
         marginBottom: 10,
+        marginTop: 10
     },
-
     addMealBtn: {
         position: "absolute",
         bottom: 20,
@@ -93,12 +90,12 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
-        elevation: 5,
+        elevation: 5
     },
     addMealBtnText: {
         color: "white",
         fontSize: 30,
-        fontWeight: "bold",
+        fontWeight: "bold"
     },
 
 });
