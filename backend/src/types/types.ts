@@ -95,3 +95,14 @@ export type Dashboard = {
     glucoseRegisters: GlucoseRegister[]     //attribute glucoseRegisters
     meals: CarbohydrateIntake[]             //attribute meals    
 }
+
+/**
+ * Application type InRangeStats
+ * ! Non persistant type -> No DDBB Model
+ */
+export type InRangeStats = {
+    low: number,                            //attribute low
+    inRange: number,                        //attribute inRange
+    high: number,                           //attribute high
+    veryHigh: number                        //attribute veryHigh
+}
