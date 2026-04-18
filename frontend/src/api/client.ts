@@ -13,6 +13,19 @@ export const API_URL = "http://192.168.0.19:3000";
  */
 export const getClientApi = async (endpoint: string) => {
     const res: Response = await fetch(`${API_URL}${endpoint}`);
+    if(!res.ok) throw new Error("Error getting data.");
+    return res.json();
+}
+
+/**
+ * * getByUserIdClientApi
+ * @param endpoint 
+ * @param userId 
+ * @returns res.json()
+ */
+export const getByUserIdClientApi = async (endpoint: string, userId: string) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}/${userId}`);
+    if(!res.ok) throw new Error("Error getting data.");
     return res.json();
 }
 
@@ -62,3 +75,4 @@ export const putClientApi = async (endpoint: string, body: any, id:string) => {
 
     if(!res.ok) throw new Error("Error editing meal");
 }
+
