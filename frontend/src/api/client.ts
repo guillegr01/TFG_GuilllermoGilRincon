@@ -18,13 +18,14 @@ export const getClientApi = async (endpoint: string) => {
 }
 
 /**
- * * getByUserIdClientApi
+ * * getStatsByUserIdClientApi
  * @param endpoint 
  * @param userId 
+ * @param days
  * @returns res.json()
  */
-export const getByUserIdClientApi = async (endpoint: string, userId: string) => {
-    const res: Response = await fetch(`${API_URL}${endpoint}/${userId}`);
+export const getStatsByUserIdClientApi = async (endpoint: string, userId: string, days: number) => {
+    const res: Response = await fetch(`${API_URL}${endpoint}/${userId}?days=${days}`);
     if(!res.ok) throw new Error("Error getting data.");
     return res.json();
 }

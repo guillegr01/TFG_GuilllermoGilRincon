@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
-import { getByUserIdClientApi } from "../api/client";
+import { getStatsByUserIdClientApi } from "../api/client";
 
 /**
  * * useStats
  * @param userId 
  * @returns 
  */
-export const useStats = (userId: string) => {
+export const useStats = (userId: string, days: number) => {
     const [stats, setStats] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
+            setLoading(true);
         try {
-            const data = await getByUserIdClientApi("/stats/user", userId);
+            const data = await getStatsByUserIdClientApi("/stats/user", userId, days);
             setStats(data);
         } catch (err) {
             console.error(err);
@@ -23,7 +24,7 @@ export const useStats = (userId: string) => {
         };
 
         fetchStats();
-    }, []);
+    }, [userId, days]);
 
     return { stats, loading };
 };

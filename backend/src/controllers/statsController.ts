@@ -17,7 +17,9 @@ export const getStatsByUserIdController = async (req: Request, res: Response) =>
     try {
         
         const userId = req.params.userId as string;
-        const statsResult = await getStatsByUserIdService(userId);
+        const daysFilter = parseInt(req.query.days as string);
+
+        const statsResult = await getStatsByUserIdService(userId, daysFilter);
 
         res.status(200);
         res.json(statsResult);
