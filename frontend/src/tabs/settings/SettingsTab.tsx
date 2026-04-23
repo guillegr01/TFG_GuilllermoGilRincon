@@ -55,7 +55,7 @@ export default function SettingsTab({ navigation }: any) {
                 
                 <TouchableOpacity 
                     style={styles.actionButton}
-                    onPress={() => navigation.navigate('TherapyDetails', { userId: user.id })} 
+                    onPress={() => navigation.navigate('TherapyInfo', { userId: user.id })} 
                 >
                     <View style={styles.actionLeft}>
                         <Ionicons name="options-outline" size={24} color="#374151" />
@@ -74,7 +74,7 @@ export default function SettingsTab({ navigation }: any) {
             {/*App information*/}
             <View style={styles.footer}>
                 <Text style={styles.versionText}>Glucocheck App</Text>
-                <Text style={styles.versionNumber}>Version 1.0.0-stable</Text>
+                <Text style={styles.versionNumber}>Version 1.0.0 - stable</Text>
                 <Text style={styles.footerDetail}>© 2026 TFG - Universidad Antonio Nebrija</Text>
             </View>
 

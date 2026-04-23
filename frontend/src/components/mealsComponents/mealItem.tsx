@@ -8,16 +8,16 @@ export default function MealItem({ meal, onEdit, onDelete,showMenu = true }: any
 
     const getPeriodColor = () => {
         switch (meal.period) {
-        case "desayuno":
-            return "#F59E0B";
-        case "comida":
-            return "#10B981";
-        case "merienda":
-            return "#3B82F6";
-        case "cena":
-            return "#8B5CF6";
-        default:
-            return "#6B7280";
+            case "desayuno":
+                return "#F59E0B";
+            case "comida":
+                return "#10B981";
+            case "merienda":
+                return "#3B82F6";
+            case "cena":
+                return "#8B5CF6";
+            default:
+                return "#6B7280";
         }
     };
 
