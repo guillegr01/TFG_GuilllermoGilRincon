@@ -44,7 +44,7 @@ export default function SettingsTab({ navigation }: any) {
                     <View style={styles.infoRow}>
                         <Ionicons name="medkit-outline" size={22} color="#10b981" />
                         <Text style={styles.infoLabel}>Diabetes</Text>
-                        <Text style={styles.infoValue}>{user.diabetesType === "tipo1" ? "Tipo 1" : "Tipo 2"}</Text>
+                        <Text style={styles.infoValue}>{user.diabetesType === "tipo 1" ? "Tipo 1" : "Tipo 2"}</Text>
                     </View>
                 </View>
             </View>

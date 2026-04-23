@@ -74,6 +74,6 @@ export const putClientApi = async (endpoint: string, body: any, id:string) => {
             body: JSON.stringify(body),
     });
 
-    if(!res.ok) throw new Error("Error editing meal");
+    if(!res.ok) throw new Error("Error updating");
 }
 

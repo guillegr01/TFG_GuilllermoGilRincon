@@ -2,19 +2,40 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, TextInput, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTherapy } from "../../hooks/useTherapy";
+import { putClientApi } from '@/src/api/client';
 
 export default function TherapyTab({ route, navigation }: any) {
     const { userId } = route.params;
     const { therapy, loading, setTherapy } = useTherapy(userId);
+
     const [isEditing, setIsEditing] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     if (loading) return <ActivityIndicator size="large" style={{flex: 1}} color="#10b981" />;
     if (!therapy) return <Text>Therapy Not found</Text>;
 
-    const handleSave = () => {
-        // Aquí iría la llamada al backend (PUT /therapy/:id)
-        Alert.alert("Éxito", "Terapia actualizada correctamente");
-        setIsEditing(false);
+    const handleSave = async () => {
+        
+        setIsUpdating(true);
+
+        try {
+            
+            await putClientApi( "/therapy", {
+                ratios: therapy.ratios,
+                glucoseTarget: therapy.glucoseTarget,
+                insulinActive: therapy.insulinActive,
+                glucoseLimits: therapy.glucoseLimits
+            }, therapy.id);
+
+            Alert.alert("Success", "Therapy updated correctly");
+            setIsEditing(false);
+        } catch (error) {
+            console.error(error);
+            Alert.alert("Update Failed");
+        } finally {
+            setIsUpdating(false);
+        }
+
     };
 
     const getPeriodColor = (period: any) => {
@@ -41,9 +62,9 @@ export default function TherapyTab({ route, navigation }: any) {
                     <Ionicons name="arrow-back" size={24} color="#374151" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>My Therapy</Text>
-                <TouchableOpacity onPress={() => isEditing ? handleSave() : setIsEditing(true)}>
-                    <Text style={[styles.editBtn, isEditing && { color: '#10b981' }]}>
-                        {isEditing ? "Save" : "Edit"}
+                <TouchableOpacity onPress={() => isEditing ? handleSave() : setIsEditing(true)} disabled={isUpdating}>
+                    <Text style={[styles.editBtn, isEditing && { color: '#10b981' }, isUpdating && { opacity: 0.5}]}>
+                        {isUpdating ? "Saving..." : (isEditing ? "Save" : "Edit")}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -66,8 +87,17 @@ export default function TherapyTab({ route, navigation }: any) {
                         )}
                     </View>
                     <View style={styles.row}>
-                        <Text style={styles.label}>Insuline Active</Text>
-                        <Text style={styles.value}>{therapy.insulinActive} h</Text>
+                        <Text style={styles.label}>Insulin Active</Text>
+                        {isEditing ? (
+                            <TextInput
+                                style={styles.input} 
+                                keyboardType="numeric"
+                                defaultValue={therapy.insulinActive.toString()}
+                                onChangeText={(val) => setTherapy({...therapy, insulinActive: Number(val)})}
+                            />
+                        ) : (
+                            <Text style={styles.value}>{therapy.insulinActive} h</Text>
+                        )}
                     </View>
                 </View>
             </View>
@@ -84,8 +114,36 @@ export default function TherapyTab({ route, navigation }: any) {
                     {therapy.ratios.map((elem: any, index: any) => (
                         <View key={index} style={styles.row}>
                             <Text style={[styles.periodText, { flex: 2, color: getPeriodColor(elem.period)}]}>{elem.period.toUpperCase()}</Text>
-                            <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.ratio}</Text>
-                            <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.sensibilityFactor}</Text>
+                            
+                            {isEditing ? (
+                                <>
+                                    <TextInput 
+                                        style={[styles.input, { flex: 1, textAlign: 'center' }]}
+                                        keyboardType="numeric"
+                                        defaultValue={elem.ratio.toString()}
+                                        onChangeText={(val) => {
+                                            const newRatios = [...therapy.ratios];
+                                            newRatios[index].ratio = Number(val);
+                                            setTherapy({...therapy, ratios: newRatios});
+                                        }}
+                                    />
+                                    <TextInput 
+                                        style={[styles.input, { flex: 1, textAlign: 'center' }]}
+                                        keyboardType="numeric"
+                                        defaultValue={elem.sensibilityFactor.toString()}
+                                        onChangeText={(val) => {
+                                            const newRatios = [...therapy.ratios];
+                                            newRatios[index].sensibilityFactor = Number(val);
+                                            setTherapy({...therapy, ratios: newRatios});
+                                        }}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.ratio}</Text>
+                                    <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.sensibilityFactor}</Text>
+                                </>
+                            )}
                         </View>
                     ))}
                 </View>
@@ -98,22 +156,58 @@ export default function TherapyTab({ route, navigation }: any) {
                     <View style={styles.row}>
                         <View style={[styles.dot, { backgroundColor: '#ef4444' }]} />
                         <Text style={styles.label}>Low Limit</Text>
-                        <Text style={styles.value}>{therapy.glucoseLimits.lowLimit} mg/dL</Text>
+                        {isEditing ? (
+                            <TextInput
+                                style={styles.input} 
+                                keyboardType="numeric"
+                                defaultValue={therapy.glucoseLimits.lowLimit.toString()}
+                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, lowLimit: Number(val)}})}
+                            />
+                        ) : (
+                            <Text style={styles.value}>{therapy.glucoseLimits.lowLimit} mg/dL</Text>
+                        )}
                     </View>
                     <View style={styles.row}>
                         <View style={[styles.dot, { backgroundColor: '#10b981' }]} />
                         <Text style={styles.label}>In Range Limit</Text>
-                        <Text style={styles.value}>{therapy.glucoseLimits.inRangeLimit} mg/dL</Text>
+                        {isEditing ? (
+                            <TextInput
+                                style={styles.input} 
+                                keyboardType="numeric"
+                                defaultValue={therapy.glucoseLimits.inRangeLimit.toString()}
+                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, inRangeLimit: Number(val)}})}
+                            />
+                        ) : (
+                            <Text style={styles.value}>{therapy.glucoseLimits.inRangeLimit} mg/dL</Text>
+                        )}
                     </View>
                     <View style={styles.row}>
                         <View style={[styles.dot, { backgroundColor: '#ffd900' }]} />
                         <Text style={styles.label}>High Limit</Text>
-                        <Text style={styles.value}>{therapy.glucoseLimits.highLimit} mg/dL</Text>
+                        {isEditing ? (
+                            <TextInput
+                                style={styles.input} 
+                                keyboardType="numeric"
+                                defaultValue={therapy.glucoseLimits.highLimit.toString()}
+                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, highLimit: Number(val)}})}
+                            />
+                        ) : (
+                            <Text style={styles.value}>{therapy.glucoseLimits.highLimit} mg/dL</Text>
+                        )}
                     </View>
                     <View style={styles.row}>
                         <View style={[styles.dot, { backgroundColor: '#fb923c' }]} />
                         <Text style={styles.label}>Very High Limit</Text>
-                        <Text style={styles.value}>{therapy.glucoseLimits.veryHighLimit} mg/dL</Text>
+                        {isEditing ? (
+                            <TextInput
+                                style={styles.input} 
+                                keyboardType="numeric"
+                                defaultValue={therapy.glucoseLimits.veryHighLimit.toString()}
+                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, veryHighLimit: Number(val)}})}
+                            />
+                        ) : (
+                            <Text style={styles.value}>{therapy.glucoseLimits.veryHighLimit} mg/dL</Text>
+                        )}
                     </View>
                 </View>
             </View>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { API_URL, putClientApi } from "../../api/client";
 
@@ -23,19 +23,20 @@ export default function EditMealTab() {
 
     const handleEdit = async () => {
         try {
-        const body = {
-            userId: meal.userId,
-            grams: Number(grams),
-            glucoseValue: Number(glucoseValue),
-            period,
-            description,
-        };
+            const body = {
+                userId: meal.userId,
+                grams: Number(grams),
+                glucoseValue: Number(glucoseValue),
+                period,
+                description,
+            };
 
-        await putClientApi("/meals", body, meal.id);
-        navigation.navigate("MainTabs", {screen: "Meals"});
+            await putClientApi("/meals", body, meal.id);
+            Alert.alert("Success", "Meal updated correctly");
+            navigation.navigate("MainTabs", {screen: "Meals"});
 
         } catch (error) {
-            console.error("Error editing meal:", error);
+            Alert.alert("Error editing meal");
         }
     };
 
