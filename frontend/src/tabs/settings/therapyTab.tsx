@@ -59,7 +59,7 @@ export default function TherapyTab({ route, navigation }: any) {
         <SafeAreaView style={styles.safeArea}>
 
             {/* Header */}
-            <View style={styles.customHeader}>
+            <View style={styles.headerTherapyTab}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back" size={24} color="#374151" />
                 </TouchableOpacity>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         backgroundColor: '#F9FAFB' 
     },
-    customHeader: {
+    headerTherapyTab: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',

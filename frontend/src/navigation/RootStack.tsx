@@ -13,10 +13,10 @@ export default function RootStack() {
             <Stack.Screen name="MainTabs" component={NavigatorTab} options={{ headerShown: false }} />
 
             {/*AddMeal tab*/}
-            <Stack.Screen name="AddMeal" component={AddMealTab} options={{title: "Add Meal", presentation: "fullScreenModal"}}/>
+            <Stack.Screen name="AddMeal" component={AddMealTab} options={{headerShown: false, title: "Add Meal"}}/>
 
             {/*EditMeal Tab*/}
-            <Stack.Screen name="EditMeal" component={EditMealTab} options={{title:"Edit Meal"}}/>
+            <Stack.Screen name="EditMeal" component={EditMealTab} options={{headerShown: false, title:"Edit Meal"}}/>
 
             <Stack.Screen name="TherapyInfo" component={TherapyTab} options={{headerShown: false, title: "My Therapy"}}/>
 
