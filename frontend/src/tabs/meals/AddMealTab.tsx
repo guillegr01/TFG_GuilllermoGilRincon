@@ -38,7 +38,8 @@ export default function AddMealTab() {
             };
 
             await postClientApi("/meals", body);
-            navigation.navigate("MainTabs", {screen: "Meals"});
+            //navigation.navigate("MainTabs", {screen: "Meals"});
+            navigation.goBack();
 
         } catch (error) {
             console.error("Error creating meal:", error);

@@ -33,7 +33,8 @@ export default function EditMealTab() {
 
             await putClientApi("/meals", body, meal.id);
             Alert.alert("Success", "Meal updated correctly");
-            navigation.navigate("MainTabs", {screen: "Meals"});
+            //navigation.navigate("MainTabs", {screen: "Meals"});
+            navigation.goBack();
 
         } catch (error) {
             Alert.alert("Error editing meal");

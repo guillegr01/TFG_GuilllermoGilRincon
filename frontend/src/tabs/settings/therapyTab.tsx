@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { Ionicons } from '@expo/vector-icons';
 import { useTherapy } from "../../hooks/useTherapy";
 import { putClientApi } from '@/src/api/client';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TherapyTab({ route, navigation }: any) {
     const { userId } = route.params;
@@ -54,7 +55,8 @@ export default function TherapyTab({ route, navigation }: any) {
     };
 
     return (
-        <ScrollView style={styles.container}>
+
+        <SafeAreaView style={styles.safeArea}>
 
             {/* Header */}
             <View style={styles.customHeader}>
@@ -69,153 +71,161 @@ export default function TherapyTab({ route, navigation }: any) {
                 </TouchableOpacity>
             </View>
 
-            {/* Therapy info */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Therapy Info</Text>
-                <View style={styles.card}>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Glucose Target</Text>
-                        {isEditing ? (
-                            <TextInput 
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.glucoseTarget.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, glucoseTarget: Number(val)})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.glucoseTarget} mg/dL</Text>
-                        )}
-                    </View>
-                    <View style={styles.row}>
-                        <Text style={styles.label}>Insulin Active</Text>
-                        {isEditing ? (
-                            <TextInput
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.insulinActive.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, insulinActive: Number(val)})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.insulinActive} h</Text>
-                        )}
-                    </View>
-                </View>
-            </View>
+            <ScrollView style={styles.container}>
 
-            {/* Ratios */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Ratios and Sensibility Factor</Text>
-                <View style={styles.card}>
-                    <View style={[styles.row, { borderBottomWidth: 1, borderBottomColor: '#F3F4F6', paddingBottom: 5 }]}>
-                        <Text style={[styles.label, { flex: 2 }]}>Period</Text>
-                        <Text style={[styles.label, { flex: 1, textAlign: 'center' }]}>Ratio</Text>
-                        <Text style={[styles.label, { flex: 1, textAlign: 'center' }]}>Sensibility Factor</Text>
-                    </View>
-                    {therapy.ratios.map((elem: any, index: any) => (
-                        <View key={index} style={styles.row}>
-                            <Text style={[styles.periodText, { flex: 2, color: getPeriodColor(elem.period)}]}>{elem.period.toUpperCase()}</Text>
-                            
+                {/* Therapy info */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Therapy Info</Text>
+                    <View style={styles.card}>
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Glucose Target</Text>
                             {isEditing ? (
-                                <>
-                                    <TextInput 
-                                        style={[styles.input, { flex: 1, textAlign: 'center' }]}
-                                        keyboardType="numeric"
-                                        defaultValue={elem.ratio.toString()}
-                                        onChangeText={(val) => {
-                                            const newRatios = [...therapy.ratios];
-                                            newRatios[index].ratio = Number(val);
-                                            setTherapy({...therapy, ratios: newRatios});
-                                        }}
-                                    />
-                                    <TextInput 
-                                        style={[styles.input, { flex: 1, textAlign: 'center' }]}
-                                        keyboardType="numeric"
-                                        defaultValue={elem.sensibilityFactor.toString()}
-                                        onChangeText={(val) => {
-                                            const newRatios = [...therapy.ratios];
-                                            newRatios[index].sensibilityFactor = Number(val);
-                                            setTherapy({...therapy, ratios: newRatios});
-                                        }}
-                                    />
-                                </>
+                                <TextInput 
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.glucoseTarget.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, glucoseTarget: Number(val)})}
+                                />
                             ) : (
-                                <>
-                                    <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.ratio}</Text>
-                                    <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.sensibilityFactor}</Text>
-                                </>
+                                <Text style={styles.value}>{therapy.glucoseTarget} mg/dL</Text>
                             )}
                         </View>
-                    ))}
+                        <View style={styles.row}>
+                            <Text style={styles.label}>Insulin Active</Text>
+                            {isEditing ? (
+                                <TextInput
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.insulinActive.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, insulinActive: Number(val)})}
+                                />
+                            ) : (
+                                <Text style={styles.value}>{therapy.insulinActive} h</Text>
+                            )}
+                        </View>
+                    </View>
                 </View>
-            </View>
 
-            {/* Range Limits */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Glucose Limits</Text>
-                <View style={styles.card}>
-                    <View style={styles.row}>
-                        <View style={[styles.dot, { backgroundColor: '#ef4444' }]} />
-                        <Text style={styles.label}>Low Limit</Text>
-                        {isEditing ? (
-                            <TextInput
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.glucoseLimits.lowLimit.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, lowLimit: Number(val)}})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.glucoseLimits.lowLimit} mg/dL</Text>
-                        )}
-                    </View>
-                    <View style={styles.row}>
-                        <View style={[styles.dot, { backgroundColor: '#10b981' }]} />
-                        <Text style={styles.label}>In Range Limit</Text>
-                        {isEditing ? (
-                            <TextInput
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.glucoseLimits.inRangeLimit.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, inRangeLimit: Number(val)}})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.glucoseLimits.inRangeLimit} mg/dL</Text>
-                        )}
-                    </View>
-                    <View style={styles.row}>
-                        <View style={[styles.dot, { backgroundColor: '#ffd900' }]} />
-                        <Text style={styles.label}>High Limit</Text>
-                        {isEditing ? (
-                            <TextInput
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.glucoseLimits.highLimit.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, highLimit: Number(val)}})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.glucoseLimits.highLimit} mg/dL</Text>
-                        )}
-                    </View>
-                    <View style={styles.row}>
-                        <View style={[styles.dot, { backgroundColor: '#fb923c' }]} />
-                        <Text style={styles.label}>Very High Limit</Text>
-                        {isEditing ? (
-                            <TextInput
-                                style={styles.input} 
-                                keyboardType="numeric"
-                                defaultValue={therapy.glucoseLimits.veryHighLimit.toString()}
-                                onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, veryHighLimit: Number(val)}})}
-                            />
-                        ) : (
-                            <Text style={styles.value}>{therapy.glucoseLimits.veryHighLimit} mg/dL</Text>
-                        )}
+                {/* Ratios */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Ratios and Sensibility Factor</Text>
+                    <View style={styles.card}>
+                        <View style={[styles.row, { borderBottomWidth: 1, borderBottomColor: '#F3F4F6', paddingBottom: 5 }]}>
+                            <Text style={[styles.label, { flex: 2 }]}>Period</Text>
+                            <Text style={[styles.label, { flex: 1, textAlign: 'center' }]}>Ratio</Text>
+                            <Text style={[styles.label, { flex: 1, textAlign: 'center' }]}>Sensibility Factor</Text>
+                        </View>
+                        {therapy.ratios.map((elem: any, index: any) => (
+                            <View key={index} style={styles.row}>
+                                <Text style={[styles.periodText, { flex: 2, color: getPeriodColor(elem.period)}]}>{elem.period.toUpperCase()}</Text>
+                                
+                                {isEditing ? (
+                                    <>
+                                        <TextInput 
+                                            style={[styles.input, { flex: 1, textAlign: 'center' }]}
+                                            keyboardType="numeric"
+                                            defaultValue={elem.ratio.toString()}
+                                            onChangeText={(val) => {
+                                                const newRatios = [...therapy.ratios];
+                                                newRatios[index].ratio = Number(val);
+                                                setTherapy({...therapy, ratios: newRatios});
+                                            }}
+                                        />
+                                        <TextInput 
+                                            style={[styles.input, { flex: 1, textAlign: 'center' }]}
+                                            keyboardType="numeric"
+                                            defaultValue={elem.sensibilityFactor.toString()}
+                                            onChangeText={(val) => {
+                                                const newRatios = [...therapy.ratios];
+                                                newRatios[index].sensibilityFactor = Number(val);
+                                                setTherapy({...therapy, ratios: newRatios});
+                                            }}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.ratio}</Text>
+                                        <Text style={[styles.value, { flex: 1, textAlign: 'center' }]}>{elem.sensibilityFactor}</Text>
+                                    </>
+                                )}
+                            </View>
+                        ))}
                     </View>
                 </View>
-            </View>
-        </ScrollView>
+
+                {/* Range Limits */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Glucose Limits</Text>
+                    <View style={styles.card}>
+                        <View style={styles.row}>
+                            <View style={[styles.dot, { backgroundColor: '#ef4444' }]} />
+                            <Text style={styles.label}>Low Limit</Text>
+                            {isEditing ? (
+                                <TextInput
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.glucoseLimits.lowLimit.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, lowLimit: Number(val)}})}
+                                />
+                            ) : (
+                                <Text style={styles.value}>{therapy.glucoseLimits.lowLimit} mg/dL</Text>
+                            )}
+                        </View>
+                        <View style={styles.row}>
+                            <View style={[styles.dot, { backgroundColor: '#10b981' }]} />
+                            <Text style={styles.label}>In Range Limit</Text>
+                            {isEditing ? (
+                                <TextInput
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.glucoseLimits.inRangeLimit.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, inRangeLimit: Number(val)}})}
+                                />
+                            ) : (
+                                <Text style={styles.value}>{therapy.glucoseLimits.inRangeLimit} mg/dL</Text>
+                            )}
+                        </View>
+                        <View style={styles.row}>
+                            <View style={[styles.dot, { backgroundColor: '#ffd900' }]} />
+                            <Text style={styles.label}>High Limit</Text>
+                            {isEditing ? (
+                                <TextInput
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.glucoseLimits.highLimit.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, highLimit: Number(val)}})}
+                                />
+                            ) : (
+                                <Text style={styles.value}>{therapy.glucoseLimits.highLimit} mg/dL</Text>
+                            )}
+                        </View>
+                        <View style={styles.row}>
+                            <View style={[styles.dot, { backgroundColor: '#fb923c' }]} />
+                            <Text style={styles.label}>Very High Limit</Text>
+                            {isEditing ? (
+                                <TextInput
+                                    style={styles.input} 
+                                    keyboardType="numeric"
+                                    defaultValue={therapy.glucoseLimits.veryHighLimit.toString()}
+                                    onChangeText={(val) => setTherapy({...therapy, glucoseLimits: {...therapy.glucoseLimits, veryHighLimit: Number(val)}})}
+                                />
+                            ) : (
+                                <Text style={styles.value}>{therapy.glucoseLimits.veryHighLimit} mg/dL</Text>
+                            )}
+                        </View>
+                    </View>
+                </View>
+            </ScrollView>
+
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#FFF'
+    },
     container: { 
         flex: 1, 
         backgroundColor: '#F9FAFB' 
@@ -225,7 +235,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 20,
-        paddingTop: 50,
+        paddingTop: 10,
         paddingBottom: 20,
         backgroundColor: '#FFF'
     },
