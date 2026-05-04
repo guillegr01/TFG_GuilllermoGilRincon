@@ -22,7 +22,8 @@
         "backgroundColor": "#10B981"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.guillegr01.glucocheck"
     },
     "web": {
       "output": "single",
@@ -43,6 +44,11 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "420bebde-2c30-4f8a-9807-37244e36f76b"
+      }
     }
   }
 }
