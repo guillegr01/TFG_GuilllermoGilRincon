@@ -35,7 +35,7 @@ app.use("/stats", statsRouter);
 
 //endpoint prueba
 app.get('/ping', (req, res) => {
-    res.json("Server running on LocalHost...");
+    res.json("Server running on Cloud...");
 });
 
 const serverHandler = async () => {
