@@ -3,8 +3,8 @@
  * * Create api client to connect front end with the backend
  */
 
-export const API_URL = "http://192.168.0.19:3000";
-//export const API_URL = "http://10.0.2.2:3000"; //For android
+//export const API_URL = "http://192.168.0.19:3000";
+export const API_URL = "https://glucocheck-7pr6.onrender.com"; //Deployment URL
 
 /**
  * * getClientApi
