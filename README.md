@@ -1,7 +1,7 @@
 # TFG_GuilllermoGilRincon
 Private github repository, where my final college degree project is gonna be allocated. This  software is about a diabetes caretracker multiplatform application. This application shall be avaliable for both Android and iOS, either OS should be compatible.
 
-## Installation and execution instructions
+## Backend Installation and execution instructions
   ### Requirements 
   - Node.JS installed
   - npm installed (included with Node.JS)
@@ -52,11 +52,46 @@ Private github repository, where my final college degree project is gonna be all
   NOTE: This command is the one established to execute the server, according to "scripts" section in package.json.
 
   <img width="1100" height="250" alt="Image" src="https://github.com/user-attachments/assets/27193a83-c0ca-4b6b-94c5-043229901aad" />
+
+## Frontend Installation and execution instructions
+  ### Requirements 
+  - Node.JS installed
+  - npm installed (included with Node.JS)
+  - Expo Go app installed on your mobile device (iOS or Android)
+  - Internet connection for dependencies and Expo services
+
+  ### Dependencies installation
+  Once you have the project cloned and opened in VSCode:
+  - Change to frontend directory: `cd ./frontend/`
+
+  Inside the frontend directory, you will find the configuration files for React Native and Expo (`package.json`, `app.json`, `babel.config.js`). To install all     necessary libraries and the `node_modules` folder, execute:
+  - `npm install`
+
+  The main dependencies included in this frontend are:
+  - expo
+  - react & react-native
+  - react-navigation (Stack & Bottom Tabs)
+  - typescript
+  - axios (for API communication)
+
+  ### Executing the Frontend
+  The backend part is already uploaded on the cloud, so it is not neccesary to execute backend. In the other hand, it will be neccesary
+  to run frontend part if you want to try the app via Expo Go on iOS, Android or Android Emulator. Execute the following command inside the frontend directory:
+  - `npx expo start`
+
+  ### How to view the application
+  Once the command is running, a QR code will appear in the terminal:
+  1. **Android:** Open the **Expo Go** app and scan the QR code.
+  2. **iOS:** Open the **Camera app**, scan the QR code, and tap the notification to open Expo Go.
+  3. **Important:** Your mobile device and your computer must be connected to the same Wi-Fi network.
   
-  ### Additional notes
-  - "node_modules" folder is not included in the repository
-  - All dependencies can be installed with "npm install".
-  - The Database used in this project is MongoDB Atlas.
+  
+### Additional notes
+- "node_modules" folder is not included in the repository
+- All dependencies can be installed with "npm install".
+- The Database used in this project is MongoDB Atlas.
+- **Expo Go** is used to avoid the need for Android Studio or Xcode during development.
+- For production-like testing, ensure the Backend server is running simultaneously.
   
   
 ## Author
