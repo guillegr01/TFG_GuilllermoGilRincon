@@ -1,3 +1,4 @@
+import { describe, test, expect } from '@jest/globals';
 import { Therapy, GlucoseRegister } from "../src/types/types";
 import { calculateStats } from "../src/utils/statsFunctions";
 
