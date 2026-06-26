@@ -20,10 +20,14 @@ describe('Unit test: testing insulin bolus calculator function', () => {
 
     test('Testing estandar bolus calculation', () => {
 
+        //Arrange
         const grams = 45;
         const glucoseValue = 102;
 
+        //Act
         const result = calculateBolus(grams, glucoseValue, "desayuno", TherapyForTesting);
+
+        //Assert
         expect(result).toBe(7);
     });
 
